@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu as MenuIcon, X, ShoppingBag, Search, User } from "lucide-react";
+import { Menu as MenuIcon, X, ShoppingBag, Search, User, ChevronDown } from "lucide-react";
 import { T } from "../lib/theme";
 import { usePublicMenus } from "../hooks/usePublicMenus";
 import { useStoreInfo } from "../hooks/useStoreInfo";
@@ -48,7 +48,7 @@ function SearchBox() {
       {open && (
         <>
           <div style={{ position: "fixed", inset: 0, zIndex: 60 }} onClick={() => setOpen(false)} />
-          <div style={{ position: "absolute", top: "calc(100% + 12px)", right: 0, width: 320, background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 10, padding: 12, zIndex: 61, boxShadow: "0 12px 30px rgba(0,0,0,0.4)" }}>
+          <div className="search-dropdown" style={{ position: "absolute", top: "calc(100% + 12px)", right: 0, width: 320, background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 10, padding: 12, zIndex: 61, boxShadow: "0 12px 30px rgba(0,0,0,0.4)" }}>
             <input
               autoFocus
               value={query}
@@ -193,25 +193,63 @@ function SiteHeader({ mainNav, onOpenMenu }) {
   );
 }
 
+function MobileNavItem({ item, onClose }) {
+  const { subcategoriesOf } = usePublicCategories();
+  const [expanded, setExpanded] = useState(false);
+  const subcategories = item.linkType === "category" ? subcategoriesOf(item.value) : [];
+  const hasSubcategories = subcategories.length > 0;
+
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Link
+          to={navHref(item)}
+          onClick={onClose}
+          className="hover-accent"
+          style={{ color: T.text, textDecoration: "none", fontSize: 16, fontWeight: 600, flex: 1 }}
+        >
+          {item.label}
+        </Link>
+        {hasSubcategories && (
+          <button
+            onClick={() => setExpanded((e) => !e)}
+            aria-label="Mostrar subcategorias"
+            style={{ background: "none", border: "none", color: T.muted, cursor: "pointer", padding: 6, display: "flex" }}
+          >
+            <ChevronDown size={18} style={{ transform: expanded ? "rotate(180deg)" : "none", transition: "transform .15s" }} />
+          </button>
+        )}
+      </div>
+      {hasSubcategories && expanded && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 12, paddingLeft: 14, borderLeft: `2px solid ${T.border}` }}>
+          {subcategories.map((s) => (
+            <Link
+              key={s.id}
+              to={`/categoria/${encodeURIComponent(s.name)}`}
+              onClick={onClose}
+              className="hover-accent"
+              style={{ color: T.muted, textDecoration: "none", fontSize: 14.5 }}
+            >
+              {s.name}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MobileDrawer({ mainNav, onClose }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex" }}>
-      <div style={{ background: T.bg, width: "min(300px, 85vw)", height: "100%", padding: 24, borderRight: `1px solid ${T.border}` }}>
+      <div style={{ background: T.bg, width: "min(300px, 85vw)", height: "100%", padding: 24, borderRight: `1px solid ${T.border}`, overflowY: "auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
           <img src={logo} alt="Trendout" style={{ height: 44 }} />
           <button onClick={onClose} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={22} /></button>
         </div>
         <nav style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           {mainNav.map((item, idx) => (
-            <Link
-              key={`${item.label}-${idx}`}
-              to={navHref(item)}
-              onClick={onClose}
-              className="hover-accent"
-              style={{ color: T.text, textDecoration: "none", fontSize: 16, fontWeight: 600 }}
-            >
-              {item.label}
-            </Link>
+            <MobileNavItem key={`${item.label}-${idx}`} item={item} onClose={onClose} />
           ))}
         </nav>
       </div>
@@ -238,7 +276,7 @@ function PaymentIcons({ accepted }) {
 function SiteFooter({ footerLoja, footerAjuda, footerLegal, info }) {
   return (
     <footer style={{ borderTop: `1px solid ${T.border}`, marginTop: 20 }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 24px 24px", display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 32 }}>
+      <div className="footer-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 24px 24px", display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 32 }}>
         <div>
           <div style={{ marginBottom: 12 }}>
             <img src={logo} alt="Trendout" style={{ height: 48 }} />
@@ -314,6 +352,8 @@ export default function Layout({ children }) {
           .desktop-nav { display: none !important; }
           .hamburger-btn { display: flex !important; }
           .cart-label { display: none; }
+          .footer-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+          .search-dropdown { width: min(320px, calc(100vw - 32px)) !important; right: -12px !important; }
         }
       `}</style>
     </div>
