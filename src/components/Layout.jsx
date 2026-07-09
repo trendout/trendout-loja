@@ -1,0 +1,314 @@
+import React, { useState } from "react";
+import { Menu as MenuIcon, X, ShoppingBag, Search, User } from "lucide-react";
+import { T } from "../lib/theme";
+import { usePublicMenus } from "../hooks/usePublicMenus";
+import { useStoreInfo } from "../hooks/useStoreInfo";
+import { useCart } from "../hooks/useCart";
+import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
+import { usePublicCategories } from "../hooks/usePublicCategories";
+import { useCategoryProducts } from "../hooks/useCategoryProducts";
+import { supabase } from "../lib/supabase";
+import logo from "../assets/logo.png";
+
+function SearchBox() {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [searching, setSearching] = useState(false);
+
+  const runSearch = async (q) => {
+    setQuery(q);
+    if (q.trim().length < 2) { setResults([]); return; }
+    setSearching(true);
+    const { data } = await supabase
+      .from("products")
+      .select("id, name, slug, base_price, images")
+      .eq("is_active", true)
+      .ilike("name", `%${q}%`)
+      .limit(6);
+    setResults(data || []);
+    setSearching(false);
+  };
+
+  return (
+    <div style={{ position: "relative" }}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        style={{ background: "none", border: "none", color: T.text, cursor: "pointer", display: "flex", alignItems: "center" }}
+        aria-label="Pesquisar"
+      >
+        <Search size={18} />
+      </button>
+
+      {open && (
+        <>
+          <div style={{ position: "fixed", inset: 0, zIndex: 60 }} onClick={() => setOpen(false)} />
+          <div style={{ position: "absolute", top: "calc(100% + 12px)", right: 0, width: 320, background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 10, padding: 12, zIndex: 61, boxShadow: "0 12px 30px rgba(0,0,0,0.4)" }}>
+            <input
+              autoFocus
+              value={query}
+              onChange={(e) => runSearch(e.target.value)}
+              placeholder="Pesquisar produtos..."
+              style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: `1px solid ${T.border}`, background: T.bg, color: T.text, fontSize: 13.5, boxSizing: "border-box" }}
+            />
+            {searching && <div style={{ color: T.muted, fontSize: 12.5, padding: "10px 4px" }}>A procurar...</div>}
+            {!searching && query.trim().length >= 2 && results.length === 0 && (
+              <div style={{ color: T.muted, fontSize: 12.5, padding: "10px 4px" }}>Sem resultados para "{query}".</div>
+            )}
+            {results.length > 0 && (
+              <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4, maxHeight: 320, overflowY: "auto" }}>
+                {results.map((p) => (
+                  <a
+                    key={p.id}
+                    href={`/produto/${p.slug}`}
+                    style={{ display: "flex", alignItems: "center", gap: 10, padding: 8, borderRadius: 8, textDecoration: "none", color: T.text }}
+                  >
+                    <div style={{ width: 40, height: 40, borderRadius: 6, overflow: "hidden", background: T.bgRaised2, flexShrink: 0 }}>
+                      {p.images?.[0] && <img src={p.images[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
+                      <div style={{ fontSize: 12, color: T.accent }}>€{Number(p.base_price).toFixed(2)}</div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function NavDropdown({ categoryName }) {
+  const { subcategoriesOf } = usePublicCategories();
+  const { products, loading } = useCategoryProducts(categoryName, 3);
+  const subcategories = subcategoriesOf(categoryName);
+
+  if (loading || (subcategories.length === 0 && products.length === 0)) return null;
+
+  return (
+    <div style={{ position: "absolute", top: "100%", left: 0, paddingTop: 12, zIndex: 61 }}>
+      <div
+        style={{
+          background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 10,
+          padding: 20, boxShadow: "0 16px 36px rgba(0,0,0,0.45)",
+          display: "flex", gap: 32, minWidth: 420,
+        }}
+      >
+        {subcategories.length > 0 && (
+          <div style={{ minWidth: 140 }}>
+            <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Subcategorias</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {subcategories.map((s) => (
+              <a key={s.id} href={`/categoria/${encodeURIComponent(s.name)}`} className="hover-accent" style={{ color: T.text, fontSize: 13, textDecoration: "none" }}>
+                {s.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {products.length > 0 && (
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Em destaque</div>
+          <div style={{ display: "flex", gap: 14 }}>
+            {products.map((p) => (
+              <a key={p.id} href={`/produto/${p.slug}`} className="hover-accent" style={{ textDecoration: "none", color: T.text, width: 92 }}>
+                <div style={{ width: 92, height: 92, borderRadius: 8, overflow: "hidden", background: T.bgRaised2, marginBottom: 6 }}>
+                  {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                </div>
+                <div style={{ fontSize: 11.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
+                <div style={{ fontSize: 11.5, color: T.accent, fontWeight: 700 }}>€{p.basePrice.toFixed(2)}</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+      </div>
+    </div>
+  );
+}
+
+function SiteHeader({ mainNav, onOpenMenu }) {
+  const { totalQty } = useCart();
+  const [hoveredItem, setHoveredItem] = useState(null);
+  return (
+    <header style={{ borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, background: T.bg, zIndex: 50 }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "18px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <button onClick={onOpenMenu} className="hamburger-btn" style={{ display: "none", background: "none", border: "none", color: T.text, cursor: "pointer" }}>
+          <MenuIcon size={22} />
+        </button>
+
+        <a href="/" style={{ display: "flex" }}>
+          <img src={logo} alt="Trendout" style={{ height: 52 }} />
+        </a>
+
+        <nav className="desktop-nav" style={{ display: "flex", gap: 28 }}>
+          {mainNav.map((item, idx) => (
+            <div
+              key={`${item.label}-${idx}`}
+              style={{ position: "relative" }}
+              onMouseEnter={() => setHoveredItem(idx)}
+              onMouseLeave={() => setHoveredItem(null)}
+            >
+              <a
+                href={item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`}
+                className="hover-accent"
+                style={{ color: T.text, textDecoration: "none", fontSize: 13.5, fontWeight: 500 }}
+              >
+                {item.label}
+              </a>
+              {item.linkType === "category" && hoveredItem === idx && (
+                <NavDropdown categoryName={item.value} />
+              )}
+            </div>
+          ))}
+        </nav>
+
+        <div style={{ display: "flex", gap: 18, fontSize: 13.5, alignItems: "center" }}>
+          <SearchBox />
+          <a href="/conta" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center" }} aria-label="A minha conta">
+            <User size={18} />
+          </a>
+          <a href="/carrinho" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, position: "relative" }}>
+            <ShoppingBag size={17} />
+            <span className="cart-label">Carrinho</span>
+            {totalQty > 0 && (
+              <span style={{ position: "absolute", top: -8, right: -10, background: T.accent, color: T.bg, fontSize: 10, fontWeight: 700, borderRadius: "50%", width: 16, height: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {totalQty}
+              </span>
+            )}
+          </a>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function MobileDrawer({ mainNav, onClose }) {
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex" }}>
+      <div style={{ background: T.bg, width: "min(300px, 85vw)", height: "100%", padding: 24, borderRight: `1px solid ${T.border}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
+          <img src={logo} alt="Trendout" style={{ height: 44 }} />
+          <button onClick={onClose} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={22} /></button>
+        </div>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          {mainNav.map((item, idx) => (
+            <a
+              key={`${item.label}-${idx}`}
+              href={item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`}
+              className="hover-accent"
+              style={{ color: T.text, textDecoration: "none", fontSize: 16, fontWeight: 600 }}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+      <div style={{ flex: 1 }} onClick={onClose} />
+    </div>
+  );
+}
+
+const PAYMENT_LABELS = { visa: "VISA", mastercard: "Mastercard", amex: "AMEX", transfer: "Transferência" };
+
+function PaymentIcons({ accepted }) {
+  const methods = (accepted && accepted.length ? accepted : ["visa", "mastercard", "amex", "transfer"]);
+  return (
+    <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+      {methods.map((m) => (
+        <span key={m} style={{ fontSize: 11, color: T.muted, border: `1px solid ${T.border}`, borderRadius: 5, padding: "4px 9px" }}>
+          {PAYMENT_LABELS[m] || m}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function SiteFooter({ footerLoja, footerAjuda, footerLegal, info }) {
+  return (
+    <footer style={{ borderTop: `1px solid ${T.border}`, marginTop: 20 }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 24px 24px", display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 32 }}>
+        <div>
+          <div style={{ marginBottom: 12 }}>
+            <img src={logo} alt="Trendout" style={{ height: 48 }} />
+          </div>
+          {info.showCompanyInfoFooter !== false && (
+            <div style={{ color: T.muted, fontSize: 13, lineHeight: 1.7 }}>
+              {info.companyAddress}<br />
+              {info.companyPhone} · {info.companyEmail}
+              {info.companyNif && <><br />NIF: {info.companyNif}</>}
+            </div>
+          )}
+          <PaymentIcons accepted={info.paymentMethodsAccepted} />
+        </div>
+        {[
+          { title: "Loja", items: footerLoja },
+          { title: "Ajuda", items: footerAjuda },
+          { title: "Legal", items: footerLegal },
+        ].map((col) => (
+          <div key={col.title}>
+            <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 14, color: T.muted }}>{col.title}</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {col.items.map((item, idx) => (
+                <a
+                  key={`${item.label}-${idx}`}
+                  href={item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`.replace("//", "/")}
+                  className="hover-accent"
+                  style={{ color: T.text, fontSize: 13, textDecoration: "none" }}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ borderTop: `1px solid ${T.border}`, padding: "16px 24px", textAlign: "center", fontSize: 11.5, color: T.muted }}>
+        © {new Date().getFullYear()} Trendout. Todos os direitos reservados.
+      </div>
+    </footer>
+  );
+}
+
+export default function Layout({ children }) {
+  const { menus, loading: menusLoading } = usePublicMenus();
+  const { info, loading: infoLoading } = useStoreInfo();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useInjectAnalytics(info.analyticsScripts);
+
+  const mainNav = menus.main_nav || [];
+  const loading = menusLoading || infoLoading;
+
+  return (
+    <div style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: "Inter, sans-serif" }}>
+      <SiteHeader mainNav={mainNav} onOpenMenu={() => setDrawerOpen(true)} />
+      {drawerOpen && <MobileDrawer mainNav={mainNav} onClose={() => setDrawerOpen(false)} />}
+
+      {children}
+
+      {!loading && (
+        <SiteFooter
+          footerLoja={menus.footer_loja || []}
+          footerAjuda={menus.footer_ajuda || []}
+          footerLegal={menus.footer_legal || []}
+          info={info}
+        />
+      )}
+
+      <style>{`
+        .hover-accent { transition: color .15s; }
+        .hover-accent:hover { color: ${T.accent} !important; }
+        @media (max-width: 780px) {
+          .desktop-nav { display: none !important; }
+          .hamburger-btn { display: flex !important; }
+          .cart-label { display: none; }
+        }
+      `}</style>
+    </div>
+  );
+}
