@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { T } from "../lib/theme";
 import { useHeroSlides } from "../hooks/useHeroSlides";
@@ -48,9 +49,9 @@ export default function HeroCarousel() {
           {slide.title}
         </h1>
         {slide.ctaLabel && (
-          <a href={slide.href || "/"} style={{ display: "inline-block", background: T.accent, color: T.bg, fontWeight: 700, fontSize: 14, padding: "14px 30px", borderRadius: 8, textDecoration: "none" }}>
+          <Link to={slide.href || "/"} style={{ display: "inline-block", background: T.accent, color: T.bg, fontWeight: 700, fontSize: 14, padding: "14px 30px", borderRadius: 8, textDecoration: "none" }}>
             {slide.ctaLabel}
-          </a>
+          </Link>
         )}
       </div>
 

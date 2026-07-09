@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { T } from "../lib/theme";
 import { supabase } from "../lib/supabase";
 import { useCart } from "../hooks/useCart";
@@ -54,7 +54,7 @@ export default function OrderConfirmationPage() {
               <p style={{ color: T.muted, fontSize: 14, marginBottom: 20 }}>
                 Encomenda <strong style={{ color: T.accent }}>{order.order_number}</strong> — obrigado pela tua compra.
               </p>
-              <a href="/conta" style={{ color: T.accent, textDecoration: "none", fontSize: 13.5 }}>Ver as minhas encomendas →</a>
+              <Link to="/conta" style={{ color: T.accent, textDecoration: "none", fontSize: 13.5 }}>Ver as minhas encomendas →</Link>
             </>
           ) : (
             <>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { LogOut, Package, Plus, Pencil, Trash2, MapPin } from "lucide-react";
 import { T } from "../lib/theme";
 import { useCustomerAuth } from "../hooks/useCustomerAuth";
@@ -151,7 +152,7 @@ function OrderHistory({ user, signOut }) {
         <div style={{ background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 10, padding: 24, textAlign: "center", color: T.muted, fontSize: 13.5 }}>
           <Package size={22} style={{ marginBottom: 8, opacity: 0.6 }} /><br />
           Ainda não tens encomendas.<br />
-          <a href="/" style={{ color: T.accent, textDecoration: "none" }}>Começar a comprar →</a>
+          <Link to="/" style={{ color: T.accent, textDecoration: "none" }}>Começar a comprar →</Link>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>

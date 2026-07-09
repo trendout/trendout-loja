@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Menu as MenuIcon, X, ShoppingBag, Search, User } from "lucide-react";
 import { T } from "../lib/theme";
 import { usePublicMenus } from "../hooks/usePublicMenus";
@@ -9,6 +10,10 @@ import { usePublicCategories } from "../hooks/usePublicCategories";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import { supabase } from "../lib/supabase";
 import logo from "../assets/logo.png";
+
+function navHref(item) {
+  return item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`.replace("//", "/");
+}
 
 function SearchBox() {
   const [open, setOpen] = useState(false);
@@ -58,9 +63,10 @@ function SearchBox() {
             {results.length > 0 && (
               <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4, maxHeight: 320, overflowY: "auto" }}>
                 {results.map((p) => (
-                  <a
+                  <Link
                     key={p.id}
-                    href={`/produto/${p.slug}`}
+                    to={`/produto/${p.slug}`}
+                    onClick={() => setOpen(false)}
                     style={{ display: "flex", alignItems: "center", gap: 10, padding: 8, borderRadius: 8, textDecoration: "none", color: T.text }}
                   >
                     <div style={{ width: 40, height: 40, borderRadius: 6, overflow: "hidden", background: T.bgRaised2, flexShrink: 0 }}>
@@ -70,7 +76,7 @@ function SearchBox() {
                       <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
                       <div style={{ fontSize: 12, color: T.accent }}>€{Number(p.base_price).toFixed(2)}</div>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
@@ -102,30 +108,30 @@ function NavDropdown({ categoryName }) {
             <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Subcategorias</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {subcategories.map((s) => (
-              <a key={s.id} href={`/categoria/${encodeURIComponent(s.name)}`} className="hover-accent" style={{ color: T.text, fontSize: 13, textDecoration: "none" }}>
-                {s.name}
-              </a>
-            ))}
+                <Link key={s.id} to={`/categoria/${encodeURIComponent(s.name)}`} className="hover-accent" style={{ color: T.text, fontSize: 13, textDecoration: "none" }}>
+                  {s.name}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {products.length > 0 && (
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Em destaque</div>
-          <div style={{ display: "flex", gap: 14 }}>
-            {products.map((p) => (
-              <a key={p.id} href={`/produto/${p.slug}`} className="hover-accent" style={{ textDecoration: "none", color: T.text, width: 92 }}>
-                <div style={{ width: 92, height: 92, borderRadius: 8, overflow: "hidden", background: T.bgRaised2, marginBottom: 6 }}>
-                  {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                </div>
-                <div style={{ fontSize: 11.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
-                <div style={{ fontSize: 11.5, color: T.accent, fontWeight: 700 }}>€{p.basePrice.toFixed(2)}</div>
-              </a>
-            ))}
+        {products.length > 0 && (
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 11, color: T.muted, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>Em destaque</div>
+            <div style={{ display: "flex", gap: 14 }}>
+              {products.map((p) => (
+                <Link key={p.id} to={`/produto/${p.slug}`} className="hover-accent" style={{ textDecoration: "none", color: T.text, width: 92 }}>
+                  <div style={{ width: 92, height: 92, borderRadius: 8, overflow: "hidden", background: T.bgRaised2, marginBottom: 6 }}>
+                    {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                  </div>
+                  <div style={{ fontSize: 11.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
+                  <div style={{ fontSize: 11.5, color: T.accent, fontWeight: 700 }}>€{p.basePrice.toFixed(2)}</div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );
@@ -141,9 +147,9 @@ function SiteHeader({ mainNav, onOpenMenu }) {
           <MenuIcon size={22} />
         </button>
 
-        <a href="/" style={{ display: "flex" }}>
+        <Link to="/" style={{ display: "flex" }}>
           <img src={logo} alt="Trendout" style={{ height: 52 }} />
-        </a>
+        </Link>
 
         <nav className="desktop-nav" style={{ display: "flex", gap: 28 }}>
           {mainNav.map((item, idx) => (
@@ -153,13 +159,13 @@ function SiteHeader({ mainNav, onOpenMenu }) {
               onMouseEnter={() => setHoveredItem(idx)}
               onMouseLeave={() => setHoveredItem(null)}
             >
-              <a
-                href={item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`}
+              <Link
+                to={navHref(item)}
                 className="hover-accent"
                 style={{ color: T.text, textDecoration: "none", fontSize: 13.5, fontWeight: 500 }}
               >
                 {item.label}
-              </a>
+              </Link>
               {item.linkType === "category" && hoveredItem === idx && (
                 <NavDropdown categoryName={item.value} />
               )}
@@ -169,10 +175,10 @@ function SiteHeader({ mainNav, onOpenMenu }) {
 
         <div style={{ display: "flex", gap: 18, fontSize: 13.5, alignItems: "center" }}>
           <SearchBox />
-          <a href="/conta" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center" }} aria-label="A minha conta">
+          <Link to="/conta" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center" }} aria-label="A minha conta">
             <User size={18} />
-          </a>
-          <a href="/carrinho" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, position: "relative" }}>
+          </Link>
+          <Link to="/carrinho" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, position: "relative" }}>
             <ShoppingBag size={17} />
             <span className="cart-label">Carrinho</span>
             {totalQty > 0 && (
@@ -180,7 +186,7 @@ function SiteHeader({ mainNav, onOpenMenu }) {
                 {totalQty}
               </span>
             )}
-          </a>
+          </Link>
         </div>
       </div>
     </header>
@@ -197,14 +203,15 @@ function MobileDrawer({ mainNav, onClose }) {
         </div>
         <nav style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           {mainNav.map((item, idx) => (
-            <a
+            <Link
               key={`${item.label}-${idx}`}
-              href={item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`}
+              to={navHref(item)}
+              onClick={onClose}
               className="hover-accent"
               style={{ color: T.text, textDecoration: "none", fontSize: 16, fontWeight: 600 }}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
@@ -254,14 +261,14 @@ function SiteFooter({ footerLoja, footerAjuda, footerLegal, info }) {
             <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 14, color: T.muted }}>{col.title}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {col.items.map((item, idx) => (
-                <a
+                <Link
                   key={`${item.label}-${idx}`}
-                  href={item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`.replace("//", "/")}
+                  to={navHref(item)}
                   className="hover-accent"
                   style={{ color: T.text, fontSize: 13, textDecoration: "none" }}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>

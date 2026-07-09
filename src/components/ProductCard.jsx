@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
 
@@ -9,7 +10,7 @@ export default function ProductCard({ product }) {
   const isOutOfStock = product.availability === "out_of_stock" || totalStock === 0;
 
   return (
-    <a href={`/produto/${product.slug}`} style={{ textDecoration: "none", color: T.text, display: "block" }}>
+    <Link to={`/produto/${product.slug}`} style={{ textDecoration: "none", color: T.text, display: "block" }}>
       <div style={{ position: "relative", aspectRatio: "3/4", background: T.bgRaised, borderRadius: 10, overflow: "hidden", marginBottom: 10 }}>
         {product.images[0] ? (
           <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -54,6 +55,6 @@ export default function ProductCard({ product }) {
           })}
         </div>
       )}
-    </a>
+    </Link>
   );
 }

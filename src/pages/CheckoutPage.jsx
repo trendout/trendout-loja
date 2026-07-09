@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { CreditCard, Landmark, ShieldCheck, Clock, Trash2, Smartphone, Hash } from "lucide-react";
 import { T } from "../lib/theme";
 import { useCart } from "../hooks/useCart";
@@ -226,7 +227,7 @@ export default function CheckoutPage() {
               Número da encomenda: <strong style={{ color: T.accent }}>{placedOrder.order_number}</strong><br />
               Enviamos-te o IBAN e a referência de pagamento por email/telefone em breve.
             </p>
-            <a href="/" style={{ color: T.accent, textDecoration: "none", fontSize: 13.5 }}>← Voltar à loja</a>
+            <Link to="/" style={{ color: T.accent, textDecoration: "none", fontSize: 13.5 }}>← Voltar à loja</Link>
           </div>
         </div>
       </Layout>
@@ -245,7 +246,7 @@ export default function CheckoutPage() {
               <StepHeader number={1} title="O teu carrinho" />
               {items.length === 0 ? (
                 <div style={{ color: T.muted, fontSize: 13.5, padding: 20, background: T.bgRaised, borderRadius: 10, textAlign: "center" }}>
-                  O teu carrinho está vazio. <a href="/" style={{ color: T.accent }}>Continuar a comprar</a>
+                  O teu carrinho está vazio. <Link to="/" style={{ color: T.accent }}>Continuar a comprar</Link>
                 </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -349,7 +350,7 @@ export default function CheckoutPage() {
 
                   {!user ? (
                     <div style={{ fontSize: 12.5, color: T.muted }}>
-                      Precisas de ter <a href="/conta" style={{ color: T.accent }}>sessão iniciada</a> para guardar uma morada de faturação diferente na tua conta.
+                      Precisas de ter <Link to="/conta" style={{ color: T.accent }}>sessão iniciada</Link> para guardar uma morada de faturação diferente na tua conta.
                     </div>
                   ) : (
                     <>

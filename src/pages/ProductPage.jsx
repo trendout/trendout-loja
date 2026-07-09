@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Truck, AlertCircle } from "lucide-react";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
@@ -52,11 +53,11 @@ export default function ProductPage({ slug }) {
     <Layout>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 24px 0" }}>
         <div style={{ fontSize: 12.5, color: T.muted, marginBottom: 20 }}>
-          <a href="/" style={{ color: T.muted, textDecoration: "none" }}>Home</a>
+          <Link to="/" style={{ color: T.muted, textDecoration: "none" }}>Home</Link>
           <span style={{ opacity: 0.4 }}> / </span>
-          <a href={`/categoria/${encodeURIComponent(product.topCategory)}`} style={{ color: T.muted, textDecoration: "none" }}>{product.topCategory}</a>
+          <Link to={`/categoria/${encodeURIComponent(product.topCategory)}`} style={{ color: T.muted, textDecoration: "none" }}>{product.topCategory}</Link>
           <span style={{ opacity: 0.4 }}> / </span>
-          <a href={`/categoria/${encodeURIComponent(product.category)}`} style={{ color: T.muted, textDecoration: "none" }}>{product.category}</a>
+          <Link to={`/categoria/${encodeURIComponent(product.category)}`} style={{ color: T.muted, textDecoration: "none" }}>{product.category}</Link>
           <span style={{ opacity: 0.4 }}> / </span>
           <span style={{ color: T.text }}>{product.name}</span>
         </div>
@@ -190,7 +191,7 @@ export default function ProductPage({ slug }) {
                 </button>
                 {added && (
                   <div style={{ marginBottom: 18 }}>
-                    <a href="/carrinho" style={{ color: T.accent, fontSize: 13, textDecoration: "none" }}>Ver carrinho e finalizar compra →</a>
+                    <Link to="/carrinho" style={{ color: T.accent, fontSize: 13, textDecoration: "none" }}>Ver carrinho e finalizar compra →</Link>
                   </div>
                 )}
               </>
