@@ -6,10 +6,10 @@
     <script type="text/javascript">
       // Redireciona qualquer rota desconhecida (ex: /produto/x) de volta para o index.html,
       // codificada na query string, para o react-router a decifrar e navegar corretamente.
-      // pathSegmentsToKeep = 0 quando serves a partir da raiz de um domínio próprio
-      // (ex: loja.trendout.pt). Se estiveres a testar em <user>.github.io/trendout-loja/
-      // sem domínio próprio ainda, muda para 1.
-      var pathSegmentsToKeep = 0;
+      // pathSegmentsToKeep = 1 enquanto serves em <user>.github.io/trendout-loja/
+      // (mantém o segmento "trendout-loja" do caminho). Muda para 0 quando
+      // ligares um domínio próprio (ex: loja.trendout.pt) na raiz.
+      var pathSegmentsToKeep = 1;
       var l = window.location;
       l.replace(
         l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") +
