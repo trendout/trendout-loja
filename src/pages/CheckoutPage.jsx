@@ -210,7 +210,9 @@ export default function CheckoutPage() {
 
       setPlacedOrder(order);
     } catch (err) {
-      setPlaceError(err.message || "Erro ao finalizar a encomenda.");
+      const fullError = [err.message, err.details, err.hint, err.code].filter(Boolean).join(" | ");
+      setPlaceError(fullError || "Erro ao finalizar a encomenda.");
+      console.error("Erro completo ao finalizar encomenda:", err);
     } finally {
       setPlacing(false);
     }
