@@ -12,7 +12,9 @@ import { supabase } from "../lib/supabase";
 import logo from "../assets/logo.png";
 
 function navHref(item) {
-  return item.linkType === "category" ? `/categoria/${encodeURIComponent(item.value)}` : `/${item.value}`.replace("//", "/");
+  if (item.linkType === "category") return `/categoria/${encodeURIComponent(item.value)}`;
+  if (item.linkType === "collection") return `/coleccao/${encodeURIComponent(item.value)}`;
+  return `/${item.value}`.replace("//", "/");
 }
 
 function SearchBox() {
