@@ -4,6 +4,7 @@ import { CartProvider } from "./hooks/useCart";
 import HomePage from "./pages/HomePage";
 import CollectionPage from "./pages/CollectionPage";
 import CollectionViewPage from "./pages/CollectionViewPage";
+import PageViewPage from "./pages/PageViewPage";
 import ProductPage from "./pages/ProductPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import AccountPage from "./pages/AccountPage";
@@ -25,6 +26,11 @@ function CollectionViewRoute() {
   return <CollectionViewPage slug={slug} />;
 }
 
+function PageRoute() {
+  const { slug } = useParams();
+  return <PageViewPage slug={slug} />;
+}
+
 export default function App() {
   return (
     <CartProvider>
@@ -33,6 +39,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/categoria/:categoryName" element={<CollectionRoute />} />
           <Route path="/coleccao/:slug" element={<CollectionViewRoute />} />
+          <Route path="/pagina/:slug" element={<PageRoute />} />
           <Route path="/produto/:slug" element={<ProductRoute />} />
           <Route path="/carrinho" element={<CheckoutPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
