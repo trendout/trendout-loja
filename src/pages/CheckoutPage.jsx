@@ -140,28 +140,30 @@ export default function CheckoutPage() {
       const billingAddr = !billingSameAsShipping ? savedAddresses.find((a) => a.id === selectedBillingId) : null;
       const effectiveNif = billingAddr ? billingAddr.nif : (wantsNif ? nif : null);
 
-      const { data: address, error: addrErr } = await supabase
+      const addressId = crypto.randomUUID();
+      const { error: addrErr } = await supabase
         .from("shipping_addresses")
         .insert({
+          id: addressId,
           full_name: form.name, phone: form.phone, email: form.email, address_line1: form.address,
           postal_code: form.postal, city: form.city, country: COUNTRIES.find((c) => c.code === form.country)?.label,
           nif: effectiveNif,
-        })
-        .select()
-        .single();
+        });
       if (addrErr) throw addrErr;
 
       const { data: { user: sessionUser } } = await supabase.auth.getUser();
 
+      const orderId = crypto.randomUUID();
       const orderNumber = `TRD-${Math.floor(10000 + Math.random() * 89999)}`;
-      const { data: order, error: orderErr } = await supabase
+      const { error: orderErr } = await supabase
         .from("orders")
         .insert({
+          id: orderId,
           order_number: orderNumber,
           customer_id: sessionUser?.id || null,
           customer_name: form.name,
           customer_email: form.email,
-          shipping_address_id: address.id,
+          shipping_address_id: addressId,
           shipping_country: form.country,
           shipping_speed: shippingSpeed,
           estimated_delivery: estimatedDeliveryDate(),
@@ -175,14 +177,14 @@ export default function CheckoutPage() {
           subtotal,
           shipping_cost: shippingCost || 0,
           total,
-        })
-        .select()
-        .single();
+        });
       if (orderErr) throw orderErr;
+
+      const order = { id: orderId, order_number: orderNumber };
 
       await supabase.from("order_items").insert(
         items.map((i) => ({
-          order_id: order.id,
+          order_id: orderId,
           product_id: i.productId,
           variant_id: i.variantId,
           product_name: i.name,
