@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Menu as MenuIcon, X, ShoppingBag, Search, User, ChevronDown } from "lucide-react";
 import { T } from "../lib/theme";
@@ -7,6 +7,7 @@ import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useCart } from "../hooks/useCart";
 import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
 import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
+import { applyTheme } from "../lib/colorUtils";
 import { usePublicCategories } from "../hooks/usePublicCategories";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import { supabase } from "../lib/supabase";
@@ -329,6 +330,10 @@ export default function Layout({ children }) {
 
   useInjectAnalytics(info.analyticsScripts);
   useGoogleIntegrations(info);
+
+  useEffect(() => {
+    if (info.theme) applyTheme(info.theme);
+  }, [info.theme]);
 
   const mainNav = menus.main_nav || [];
   const loading = menusLoading || infoLoading;

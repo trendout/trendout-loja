@@ -7,11 +7,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
+      :root {
+        --color-bg: #0f1210;
+        --color-bg-raised: #171b18;
+        --color-bg-raised-2: #1c211d;
+        --color-border: #262b26;
+        --color-text: #eef0ec;
+        --color-muted: #8a9089;
+        --color-accent: #c9ff3f;
+        --font-heading: 'Bebas Neue', sans-serif;
+        --font-body: 'Inter', sans-serif;
+      }
       * { box-sizing: border-box; }
-      html, body { margin: 0; padding: 0; background: #0f1210; height: 100%; }
+      html, body { margin: 0; padding: 0; background: var(--color-bg); height: 100%; }
       html { overscroll-behavior: none; }
       body { -webkit-text-size-adjust: 100%; overflow-x: hidden; min-height: 100%; overscroll-behavior-y: none; }
-      #root { overflow-x: hidden; min-height: 100vh; background: #0f1210; }
+      #root { overflow-x: hidden; min-height: 100vh; background: var(--color-bg); }
     </style>
     <script type="text/javascript">
       // Complemento do truque em public/404.html — descodifica a rota original

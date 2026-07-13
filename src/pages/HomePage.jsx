@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { T } from "../lib/theme";
 import { usePublicMenus } from "../hooks/usePublicMenus";
+import { useStoreInfo } from "../hooks/useStoreInfo";
 import { supabase } from "../lib/supabase";
 import Layout from "../components/Layout";
 import HeroCarousel from "../components/HeroCarousel";
@@ -60,6 +61,7 @@ function NewsletterSection() {
 
 export default function HomePage() {
   const { menus, loading } = usePublicMenus();
+  const { info } = useStoreInfo();
   const mainNav = menus.main_nav || [];
   const topCategoryNames = [...new Set(mainNav.filter((i) => i.linkType === "category").map((i) => i.value))];
 
@@ -71,7 +73,7 @@ export default function HomePage() {
         <div style={{ textAlign: "center", color: T.muted, padding: 60 }}>A carregar...</div>
       ) : (
         <div style={{ paddingTop: 48 }}>
-          {topCategoryNames.map((name) => <CategorySection key={name} title={name} />)}
+          {topCategoryNames.map((name) => <CategorySection key={name} title={name} limit={info.homepageProductsPerCategory || 8} />)}
         </div>
       )}
 

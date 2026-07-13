@@ -35,6 +35,7 @@ export function useStoreInfo() {
         enableGoogleAds: data.enable_google_ads,
         googleAdsConversionId: data.google_ads_conversion_id || "",
         googleAdsConversionLabel: data.google_ads_conversion_label || "",
+        homepageProductsPerCategory: data.homepage_products_per_category ?? 8,
         theme: data.theme || DEFAULT_THEME,
       });
       setLoading(false);

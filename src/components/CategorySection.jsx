@@ -4,8 +4,8 @@ import { T } from "../lib/theme";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import ProductCard from "./ProductCard";
 
-export default function CategorySection({ title }) {
-  const { products, loading } = useCategoryProducts(title, 6);
+export default function CategorySection({ title, limit = 8 }) {
+  const { products, loading } = useCategoryProducts(title, limit);
 
   if (!loading && products.length === 0) return null;
 
