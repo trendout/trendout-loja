@@ -6,6 +6,7 @@ import { usePublicMenus } from "../hooks/usePublicMenus";
 import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useCart } from "../hooks/useCart";
 import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
+import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
 import { usePublicCategories } from "../hooks/usePublicCategories";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import { supabase } from "../lib/supabase";
@@ -327,6 +328,7 @@ export default function Layout({ children }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useInjectAnalytics(info.analyticsScripts);
+  useGoogleIntegrations(info);
 
   const mainNav = menus.main_nav || [];
   const loading = menusLoading || infoLoading;

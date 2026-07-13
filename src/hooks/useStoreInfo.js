@@ -31,6 +31,10 @@ export function useStoreInfo() {
         enableMultibanco: data.enable_multibanco,
         multibancoEntity: data.multibanco_entity || "",
         enableMbway: data.enable_mbway,
+        googleSiteVerification: data.google_site_verification || "",
+        enableGoogleAds: data.enable_google_ads,
+        googleAdsConversionId: data.google_ads_conversion_id || "",
+        googleAdsConversionLabel: data.google_ads_conversion_label || "",
         theme: data.theme || DEFAULT_THEME,
       });
       setLoading(false);
