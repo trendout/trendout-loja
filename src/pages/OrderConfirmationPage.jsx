@@ -14,22 +14,34 @@ export default function OrderConfirmationPage() {
 
   useEffect(() => {
     // o webhook do Stripe pode demorar 1-2 segundos a confirmar o pagamento — tentamos
-    // algumas vezes antes de desistir, para o cliente já ver o estado "Confirmada"
+    // algumas vezes antes de desistir, para o cliente já ver o estado "Confirmada".
+    // Usamos uma Edge Function (não lemos a tabela diretamente) porque um cliente
+    // convidado, sem sessão, não tem permissão para ler encomendas por segurança.
     let attempts = 0;
     let cancelled = false;
 
     async function poll() {
       if (!orderNumber) { setLoading(false); return; }
-      const { data } = await supabase.from("orders").select("*").eq("order_number", orderNumber).single();
+
+      const { data, error } = await supabase.functions.invoke("get-order-status", {
+        body: { orderNumber },
+      });
+
       if (cancelled) return;
 
-      if (data && (data.payment_status === "paid" || attempts >= 5)) {
+      if (!error && data && (data.payment_status === "paid" || attempts >= 5)) {
         setOrder(data);
         setLoading(false);
         clear(); // esvazia o carrinho só depois de confirmarmos a encomenda
         return;
       }
       attempts += 1;
+      if (attempts >= 6) {
+        // desiste de vez ao fim de umas tentativas, mesmo sem confirmação — evita ficar preso para sempre
+        setOrder(data || null);
+        setLoading(false);
+        return;
+      }
       setTimeout(poll, 1500);
     }
 
