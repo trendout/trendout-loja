@@ -210,6 +210,12 @@ export default function CheckoutPage() {
         return; // a página vai navegar para fora, não há mais nada a fazer aqui
       }
 
+      // Avisa o cliente e a admin por email (transferência bancária — o cartão já
+      // é avisado via webhook do Stripe, depois de confirmado o pagamento)
+      supabase.functions.invoke("send-order-emails", { body: { orderId } }).catch((err) => {
+        console.error("Falha ao enviar emails da encomenda:", err.message);
+      });
+
       setPlacedOrder(order);
     } catch (err) {
       const fullError = [err.message, err.details, err.hint, err.code].filter(Boolean).join(" | ");
