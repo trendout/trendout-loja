@@ -8,6 +8,7 @@ import { useCart } from "../hooks/useCart";
 import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
 import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
 import { applyTheme } from "../lib/colorUtils";
+import { useTrackPageView } from "../hooks/useTrackPageView";
 import { usePublicCategories } from "../hooks/usePublicCategories";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import { supabase } from "../lib/supabase";
@@ -372,6 +373,7 @@ export default function Layout({ children }) {
 
   useInjectAnalytics(info.analyticsScripts);
   useGoogleIntegrations(info);
+  useTrackPageView();
 
   useEffect(() => {
     if (info.theme) applyTheme(info.theme);
