@@ -36,6 +36,10 @@ export function useStoreInfo() {
         googleAdsConversionId: data.google_ads_conversion_id || "",
         googleAdsConversionLabel: data.google_ads_conversion_label || "",
         homepageProductsPerCategory: data.homepage_products_per_category ?? 8,
+        maintenanceModeEnabled: data.maintenance_mode_enabled,
+        maintenanceMessage: data.maintenance_message || "",
+        announcementEnabled: data.announcement_enabled,
+        announcementMessage: data.announcement_message || "",
         theme: data.theme || DEFAULT_THEME,
       });
       setLoading(false);

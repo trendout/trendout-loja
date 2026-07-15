@@ -323,6 +323,48 @@ function SiteFooter({ footerLoja, footerAjuda, footerLegal, info }) {
   );
 }
 
+function AnnouncementBanner({ message }) {
+  const [dismissed, setDismissed] = useState(() => sessionStorage.getItem("trendout_announcement_dismissed") === message);
+
+  if (!message || dismissed) return null;
+
+  const dismiss = () => {
+    sessionStorage.setItem("trendout_announcement_dismissed", message);
+    setDismissed(true);
+  };
+
+  return (
+    <div style={{ background: T.accent, color: T.bg, padding: "10px 24px", textAlign: "center", fontSize: 13, fontWeight: 600, position: "relative" }}>
+      <span style={{ paddingRight: 28 }}>{message}</span>
+      <button
+        onClick={dismiss}
+        aria-label="Fechar aviso"
+        style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: T.bg, cursor: "pointer", display: "flex", padding: 4 }}
+      >
+        <X size={15} />
+      </button>
+    </div>
+  );
+}
+
+function MaintenanceOverlay({ message }) {
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 9999,
+      background: "rgba(0,0,0,0.5)", backdropFilter: "blur(2px)",
+      display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
+    }}>
+      <div style={{ background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 16, padding: "40px 32px", maxWidth: 440, textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}>
+        <div style={{ fontSize: 36, marginBottom: 16 }}>🛠️</div>
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, margin: "0 0 12px", color: T.text }}>Loja em manutenção</h1>
+        <p style={{ color: T.muted, fontSize: 14, lineHeight: 1.6, margin: 0, whiteSpace: "pre-line" }}>
+          {message || "Estamos a atualizar a loja. Volta a visitar-nos em breve!"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function Layout({ children }) {
   const { menus, loading: menusLoading } = usePublicMenus();
   const { info, loading: infoLoading } = useStoreInfo();
@@ -340,6 +382,10 @@ export default function Layout({ children }) {
 
   return (
     <div style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: "Inter, sans-serif" }}>
+      {info.announcementEnabled && info.announcementMessage && (
+        <AnnouncementBanner message={info.announcementMessage} />
+      )}
+
       <SiteHeader mainNav={mainNav} onOpenMenu={() => setDrawerOpen(true)} />
       {drawerOpen && <MobileDrawer mainNav={mainNav} onClose={() => setDrawerOpen(false)} />}
 
@@ -352,6 +398,10 @@ export default function Layout({ children }) {
           footerLegal={menus.footer_legal || []}
           info={info}
         />
+      )}
+
+      {!loading && info.maintenanceModeEnabled && (
+        <MaintenanceOverlay message={info.maintenanceMessage} />
       )}
 
       <style>{`
