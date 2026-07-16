@@ -10,6 +10,7 @@ import { validateCoupon, computeDiscount } from "../lib/coupons";
 import { supabase } from "../lib/supabase";
 import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import { useCustomerAddresses } from "../hooks/useCustomerAddresses";
+import { useMyPoints } from "../hooks/useMyPoints";
 import AddressModal from "../components/AddressModal";
 import Layout from "../components/Layout";
 
@@ -61,6 +62,8 @@ export default function CheckoutPage() {
   const { rates: vatRates } = useVatRates();
   const { info } = useStoreInfo();
   const { user } = useCustomerAuth();
+  const { balance: pointsBalance } = useMyPoints(user);
+  const [pointsToUse, setPointsToUse] = useState(0);
 
   useEffect(() => {
     if (user?.email) setForm((f) => (f.email ? f : { ...f, email: user.email }));
@@ -106,7 +109,10 @@ export default function CheckoutPage() {
   }, [addressReady, countryRate, shippingSpeed, subtotal, freeShippingThreshold]);
 
   const discount = computeDiscount(coupon, subtotal);
-  const total = subtotal - discount + (shippingCost || 0);
+  const pointsRate = info.pointsPerEuroDiscount || 100;
+  const maxRedeemablePoints = Math.min(pointsBalance, Math.floor((subtotal - discount) * pointsRate));
+  const pointsDiscount = +((pointsToUse / pointsRate).toFixed(2));
+  const total = Math.max(0, subtotal - discount - pointsDiscount + (shippingCost || 0));
   const vatRatePercent = vatRates[form.country] ?? null;
   const vatAmount = vatRatePercent !== null ? +(total - total / (1 + vatRatePercent / 100)).toFixed(2) : null;
   const progressPct = Math.min(100, (subtotal / freeShippingThreshold) * 100);
@@ -174,6 +180,7 @@ export default function CheckoutPage() {
           payment_status: "unpaid",
           coupon_code: coupon?.code || null,
           discount_amount: discount,
+          points_redeemed: pointsToUse || 0,
           subtotal,
           shipping_cost: shippingCost || 0,
           total,
@@ -181,6 +188,17 @@ export default function CheckoutPage() {
       if (orderErr) throw orderErr;
 
       const order = { id: orderId, order_number: orderNumber };
+
+      // Regista o gasto dos pontos logo (independente do estado do pagamento —
+      // os pontos GANHOS na compra só entram depois, quando o pagamento for confirmado)
+      if (pointsToUse > 0 && sessionUser?.id) {
+        await supabase.from("points_ledger").insert({
+          customer_id: sessionUser.id,
+          order_id: orderId,
+          points: -pointsToUse,
+          reason: "resgate",
+        });
+      }
 
       await supabase.from("order_items").insert(
         items.map((i) => ({
@@ -511,9 +529,32 @@ export default function CheckoutPage() {
             </div>
             {couponMsg && <div style={{ fontSize: 12, color: coupon ? T.accent : T.danger, marginBottom: 14 }}>{couponMsg}</div>}
 
+            {info.loyaltyPointsEnabled && user && pointsBalance > 0 && (
+              <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 14, marginBottom: 4 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, color: T.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 8 }}>
+                  <span>Usar pontos ({pointsBalance} disponíveis)</span>
+                  <span style={{ color: T.accent }}>−€{pointsDiscount.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={maxRedeemablePoints}
+                  step={Math.max(1, Math.floor(pointsRate / 10))}
+                  value={Math.min(pointsToUse, maxRedeemablePoints)}
+                  onChange={(e) => setPointsToUse(Number(e.target.value))}
+                  style={{ width: "100%", accentColor: T.accent }}
+                />
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: T.muted, marginTop: 4 }}>
+                  <span>0 pontos</span>
+                  <span>{maxRedeemablePoints} pontos (máx.)</span>
+                </div>
+              </div>
+            )}
+
             <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 14, display: "flex", flexDirection: "column", gap: 8, fontSize: 13.5 }}>
               <div style={{ display: "flex", justifyContent: "space-between", color: T.muted }}><span>Subtotal</span><span>€{subtotal.toFixed(2)}</span></div>
               {discount > 0 && <div style={{ display: "flex", justifyContent: "space-between", color: T.accent }}><span>Desconto</span><span>−€{discount.toFixed(2)}</span></div>}
+              {pointsDiscount > 0 && <div style={{ display: "flex", justifyContent: "space-between", color: T.accent }}><span>Pontos ({pointsToUse})</span><span>−€{pointsDiscount.toFixed(2)}</span></div>}
               <div style={{ display: "flex", justifyContent: "space-between", color: T.muted }}>
                 <span>Envio</span><span>{shippingCost === null ? "A calcular" : shippingCost === 0 ? "Grátis" : `€${shippingCost.toFixed(2)}`}</span>
               </div>

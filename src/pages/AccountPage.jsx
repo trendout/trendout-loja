@@ -5,6 +5,8 @@ import { T } from "../lib/theme";
 import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import { useMyOrders } from "../hooks/useMyOrders";
 import { useCustomerAddresses } from "../hooks/useCustomerAddresses";
+import { useMyPoints } from "../hooks/useMyPoints";
+import { useStoreInfo } from "../hooks/useStoreInfo";
 import Layout from "../components/Layout";
 import AddressModal from "../components/AddressModal";
 
@@ -129,6 +131,8 @@ function AuthForm({ signIn, signUp }) {
 
 function OrderHistory({ user, signOut }) {
   const { orders, loading } = useMyOrders(user);
+  const { balance: pointsBalance, loading: pointsLoading } = useMyPoints(user);
+  const { info } = useStoreInfo();
 
   return (
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px" }}>
@@ -141,6 +145,19 @@ function OrderHistory({ user, signOut }) {
           <LogOut size={14} /> Sair
         </button>
       </div>
+
+      {info.loyaltyPointsEnabled && !pointsLoading && (
+        <div style={{ background: T.bgRaised, border: `1px solid ${T.accent}55`, borderRadius: 12, padding: 18, margin: "20px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ fontSize: 11.5, color: T.muted, textTransform: "uppercase", letterSpacing: 0.4 }}>Os teus pontos</div>
+            <div style={{ fontFamily: T.fontHeading, fontSize: 28, color: T.accent, marginTop: 2 }}>{pointsBalance}</div>
+          </div>
+          <div style={{ fontSize: 12, color: T.muted, textAlign: "right", maxWidth: 200 }}>
+            {info.pointsPerEuroDiscount > 0 &&
+              `Usa-os no checkout — cada ${info.pointsPerEuroDiscount} pontos valem €1 de desconto.`}
+          </div>
+        </div>
+      )}
 
       <AddressesSection user={user} />
 
