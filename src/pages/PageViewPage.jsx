@@ -26,7 +26,7 @@ export default function PageViewPage({ slug }) {
           />
         )}
 
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 36, letterSpacing: 0.5, margin: "0 0 24px" }}>
+        <h1 style={{ fontFamily: T.fontHeading, fontSize: 36, letterSpacing: 0.5, margin: "0 0 24px" }}>
           {page.title}
         </h1>
 

@@ -50,7 +50,7 @@ function StepHeader({ number, title }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
       <span style={{ width: 28, height: 28, borderRadius: "50%", background: T.accent, color: T.bg, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13 }}>{number}</span>
-      <h2 style={{ margin: 0, fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, letterSpacing: 0.5 }}>{title}</h2>
+      <h2 style={{ margin: 0, fontFamily: T.fontHeading, fontSize: 20, letterSpacing: 0.5 }}>{title}</h2>
     </div>
   );
 }
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 24px" }}>
           <div style={{ maxWidth: 440, textAlign: "center" }}>
             <div style={{ fontSize: 40, marginBottom: 16 }}>✓</div>
-            <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, margin: "0 0 12px" }}>Encomenda recebida!</h1>
+            <h1 style={{ fontFamily: T.fontHeading, fontSize: 28, margin: "0 0 12px" }}>Encomenda recebida!</h1>
             <p style={{ color: T.muted, fontSize: 14, marginBottom: 20 }}>
               Número da encomenda: <strong style={{ color: T.accent }}>{placedOrder.order_number}</strong><br />
               Enviamos-te o IBAN e a referência de pagamento por email/telefone em breve.
@@ -247,7 +247,7 @@ export default function CheckoutPage() {
   return (
     <Layout>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 24px 80px" }}>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 32, letterSpacing: 0.5, margin: "0 0 28px" }}>Checkout</h1>
+        <h1 style={{ fontFamily: T.fontHeading, fontSize: 32, letterSpacing: 0.5, margin: "0 0 28px" }}>Checkout</h1>
 
         <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 40, alignItems: "start" }}>
           <div>
@@ -493,7 +493,7 @@ export default function CheckoutPage() {
 
           {/* RESUMO */}
           <aside style={{ background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 12, padding: 22, position: "sticky", top: 24 }}>
-            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, margin: "0 0 16px" }}>Resumo</h2>
+            <h2 style={{ fontFamily: T.fontHeading, fontSize: 20, margin: "0 0 16px" }}>Resumo</h2>
 
             <div style={{ marginBottom: 18 }}>
               <div style={{ height: 6, borderRadius: 4, background: T.bg, overflow: "hidden", marginBottom: 8 }}>

@@ -22,7 +22,7 @@ export default function AddressModal({ address, onClose, onSave }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "flex-start", justifyContent: "center", zIndex: 200, padding: "40px 16px", overflowY: "auto" }}>
       <div style={{ width: "100%", maxWidth: 440, background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 14, padding: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-          <h3 style={{ margin: 0, fontFamily: "'Bebas Neue', sans-serif", fontSize: 20 }}>{address ? "Editar morada" : "Nova morada"}</h3>
+          <h3 style={{ margin: 0, fontFamily: T.fontHeading, fontSize: 20 }}>{address ? "Editar morada" : "Nova morada"}</h3>
           <button onClick={onClose} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={18} /></button>
         </div>
 

@@ -26,7 +26,7 @@ function AddressesSection({ user }) {
   return (
     <div style={{ marginBottom: 40 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, margin: 0 }}>As minhas moradas</h2>
+        <h2 style={{ fontFamily: T.fontHeading, fontSize: 20, margin: 0 }}>As minhas moradas</h2>
         <button onClick={() => setModalAddr(null)} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: `1px solid ${T.border}`, borderRadius: 8, color: T.accent, padding: "8px 14px", cursor: "pointer", fontSize: 12.5 }}>
           <Plus size={14} /> Nova morada
         </button>
@@ -98,7 +98,7 @@ function AuthForm({ signIn, signUp }) {
 
   return (
     <div style={{ maxWidth: 380, margin: "60px auto", padding: "0 24px" }}>
-      <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, marginBottom: 6 }}>
+      <h1 style={{ fontFamily: T.fontHeading, fontSize: 28, marginBottom: 6 }}>
         {mode === "signup" ? "Criar conta" : "Entrar na tua conta"}
       </h1>
       <p style={{ color: T.muted, fontSize: 13, marginBottom: 24 }}>
@@ -134,7 +134,7 @@ function OrderHistory({ user, signOut }) {
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "40px 24px 80px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
         <div>
-          <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 30, margin: 0 }}>A minha conta</h1>
+          <h1 style={{ fontFamily: T.fontHeading, fontSize: 30, margin: 0 }}>A minha conta</h1>
           <p style={{ color: T.muted, fontSize: 13.5, margin: "4px 0 0" }}>{user.email}</p>
         </div>
         <button onClick={signOut} style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: `1px solid ${T.border}`, borderRadius: 8, color: T.muted, padding: "8px 14px", cursor: "pointer", fontSize: 12.5 }}>
@@ -144,7 +144,7 @@ function OrderHistory({ user, signOut }) {
 
       <AddressesSection user={user} />
 
-      <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, margin: "0 0 16px" }}>As tuas encomendas</h2>
+      <h2 style={{ fontFamily: T.fontHeading, fontSize: 20, margin: "0 0 16px" }}>As tuas encomendas</h2>
 
       {loading ? (
         <div style={{ color: T.muted, fontSize: 13.5 }}>A carregar encomendas...</div>

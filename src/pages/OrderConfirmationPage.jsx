@@ -56,13 +56,13 @@ export default function OrderConfirmationPage() {
           {loading ? (
             <>
               <div style={{ fontSize: 32, marginBottom: 16 }}>⏳</div>
-              <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, margin: "0 0 12px" }}>A confirmar o teu pagamento...</h1>
+              <h1 style={{ fontFamily: T.fontHeading, fontSize: 24, margin: "0 0 12px" }}>A confirmar o teu pagamento...</h1>
               <p style={{ color: T.muted, fontSize: 13.5 }}>Só demora um instante.</p>
             </>
           ) : order?.payment_status === "paid" ? (
             <>
               <div style={{ fontSize: 40, marginBottom: 16 }}>✓</div>
-              <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, margin: "0 0 12px" }}>Pagamento confirmado!</h1>
+              <h1 style={{ fontFamily: T.fontHeading, fontSize: 28, margin: "0 0 12px" }}>Pagamento confirmado!</h1>
               <p style={{ color: T.muted, fontSize: 14, marginBottom: 20 }}>
                 Encomenda <strong style={{ color: T.accent }}>{order.order_number}</strong> — obrigado pela tua compra.
               </p>
@@ -71,7 +71,7 @@ export default function OrderConfirmationPage() {
           ) : (
             <>
               <div style={{ fontSize: 32, marginBottom: 16 }}>⚠</div>
-              <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, margin: "0 0 12px" }}>Ainda a processar</h1>
+              <h1 style={{ fontFamily: T.fontHeading, fontSize: 24, margin: "0 0 12px" }}>Ainda a processar</h1>
               <p style={{ color: T.muted, fontSize: 13.5, marginBottom: 20 }}>
                 O teu pagamento está a ser confirmado. Se não vires a atualização em breve, contacta-nos com o número da encomenda.
               </p>

@@ -358,7 +358,7 @@ function MaintenanceOverlay({ message }) {
     }}>
       <div style={{ background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 16, padding: "40px 32px", maxWidth: 440, textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}>
         <div style={{ fontSize: 36, marginBottom: 16 }}>🛠️</div>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 24, margin: "0 0 12px", color: T.text }}>Loja em manutenção</h1>
+        <h1 style={{ fontFamily: T.fontHeading, fontSize: 24, margin: "0 0 12px", color: T.text }}>Loja em manutenção</h1>
         <p style={{ color: T.muted, fontSize: 14, lineHeight: 1.6, margin: 0, whiteSpace: "pre-line" }}>
           {message || "Estamos a atualizar a loja. Volta a visitar-nos em breve!"}
         </p>
@@ -385,7 +385,7 @@ export default function Layout({ children }) {
   const loading = menusLoading || infoLoading;
 
   return (
-    <div style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: "Inter, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: T.bg, color: T.text, fontFamily: T.fontBody }}>
       {info.announcementEnabled && info.announcementMessage && (
         <AnnouncementBanner message={info.announcementMessage} />
       )}

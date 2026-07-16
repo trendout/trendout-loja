@@ -70,7 +70,7 @@ export default function ProductPage({ slug }) {
               <span>{product.brand || "Trendout"}</span>
               {product.reference && <span>Ref. {product.reference}{activeColor ? `-${activeColor.slice(0, 3).toUpperCase()}` : ""}</span>}
             </div>
-            <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 30, letterSpacing: 0.5, margin: "0 0 14px" }}>{product.name}</h1>
+            <h1 style={{ fontFamily: T.fontHeading, fontSize: 30, letterSpacing: 0.5, margin: "0 0 14px" }}>{product.name}</h1>
 
             <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 16 }}>
               <span style={{ fontSize: 24, fontWeight: 700, color: product.compareAtPrice ? T.accent : T.text }}>€{product.basePrice.toFixed(2)}</span>
@@ -199,7 +199,7 @@ export default function ProductPage({ slug }) {
 
             {product.description && (
               <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 22 }}>
-                <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, margin: "0 0 12px" }}>Descrição</h2>
+                <h2 style={{ fontFamily: T.fontHeading, fontSize: 18, margin: "0 0 12px" }}>Descrição</h2>
                 <p style={{ fontSize: 13.5, color: "#cfd3cd", lineHeight: 1.7, margin: "0 0 14px" }}>{product.description}</p>
                 {product.features.length > 0 && (
                   <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13.5, color: "#cfd3cd", lineHeight: 1.9 }}>
@@ -214,7 +214,7 @@ export default function ProductPage({ slug }) {
 
       {related.length > 0 && (
         <section style={{ maxWidth: 1200, margin: "56px auto 0", padding: "40px 24px", borderTop: `1px solid ${T.border}` }}>
-          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 22, margin: "0 0 4px" }}>Quem comprou este produto, comprou também:</h2>
+          <h2 style={{ fontFamily: T.fontHeading, fontSize: 22, margin: "0 0 4px" }}>Quem comprou este produto, comprou também:</h2>
           <p style={{ color: T.muted, fontSize: 13, margin: "0 0 24px" }}>Recomendado com base em compras de outros clientes</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 20 }}>
             {related.map((p) => <ProductCard key={p.id} product={p} />)}

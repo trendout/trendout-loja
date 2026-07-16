@@ -45,7 +45,7 @@ export default function HeroCarousel() {
             {slide.eyebrow}
           </div>
         )}
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 7vw, 72px)", letterSpacing: 0.5, margin: "0 0 22px", color: T.text, lineHeight: 1 }}>
+        <h1 style={{ fontFamily: T.fontHeading, fontSize: "clamp(40px, 7vw, 72px)", letterSpacing: 0.5, margin: "0 0 22px", color: T.text, lineHeight: 1 }}>
           {slide.title}
         </h1>
         {slide.ctaLabel && (

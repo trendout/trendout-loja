@@ -176,7 +176,7 @@ export default function CollectionPage({ categoryName = "T-shirts técnicas", ti
     <Layout>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
         <div style={{ fontSize: 12.5, color: T.muted, marginBottom: 8 }}>Home / {categoryName}</div>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 34, letterSpacing: 0.5, margin: "0 0 24px" }}>
+        <h1 style={{ fontFamily: T.fontHeading, fontSize: 34, letterSpacing: 0.5, margin: "0 0 24px" }}>
           {title || categoryName}
         </h1>
 
@@ -221,7 +221,7 @@ export default function CollectionPage({ categoryName = "T-shirts técnicas", ti
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 200, display: "flex" }}>
           <div style={{ background: T.bg, width: "min(320px, 85vw)", height: "100%", padding: 24, overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
-              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 20 }}>Filtros</span>
+              <span style={{ fontFamily: T.fontHeading, fontSize: 20 }}>Filtros</span>
               <button onClick={() => setMobileFiltersOpen(false)} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={20} /></button>
             </div>
             {FiltersPanel}

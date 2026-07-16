@@ -12,7 +12,7 @@ export default function CategorySection({ title, limit = 8 }) {
   return (
     <section style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px 56px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 18 }}>
-        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 26, letterSpacing: 0.5, margin: 0 }}>{title}</h2>
+        <h2 style={{ fontFamily: T.fontHeading, fontSize: 26, letterSpacing: 0.5, margin: 0 }}>{title}</h2>
         <Link to={`/categoria/${encodeURIComponent(title)}`} className="hover-accent" style={{ color: T.muted, fontSize: 13, textDecoration: "none" }}>Ver tudo →</Link>
       </div>
       {loading ? (

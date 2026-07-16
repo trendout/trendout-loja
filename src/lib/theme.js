@@ -14,4 +14,6 @@ export const T = {
   accentDim: "#7c9a2e",
   danger: "#ff6b5e",
   warn: "#ffb44d",
+  fontHeading: "var(--font-heading, 'Bebas Neue', sans-serif)",
+  fontBody: "var(--font-body, 'Inter', sans-serif)",
 };

@@ -30,7 +30,7 @@ function NewsletterSection() {
         <div style={{ fontSize: 12, color: T.accent, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>
           Junta-te à comunidade
         </div>
-        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, margin: "0 0 18px" }}>
+        <h2 style={{ fontFamily: T.fontHeading, fontSize: 28, margin: "0 0 18px" }}>
           Novidades e promoções em primeira mão
         </h2>
         {sent ? (
