@@ -416,7 +416,14 @@ export default function Layout({ children }) {
           .hamburger-btn { display: flex !important; }
           .cart-label { display: none; }
           .footer-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
-          .search-dropdown { width: min(320px, calc(100vw - 32px)) !important; right: -12px !important; }
+          .search-dropdown {
+            position: fixed !important;
+            left: 50% !important;
+            right: auto !important;
+            top: 70px !important;
+            transform: translateX(-50%) !important;
+            width: calc(100vw - 32px) !important;
+          }
         }
       `}</style>
     </div>
