@@ -40,6 +40,9 @@ export function useStoreInfo() {
         maintenanceMessage: data.maintenance_message || "",
         announcementEnabled: data.announcement_enabled,
         announcementMessage: data.announcement_message || "",
+        loyaltyPointsEnabled: data.loyalty_points_enabled,
+        pointsPerEuroSpent: data.points_per_euro_spent ?? 2,
+        pointsPerEuroDiscount: data.points_per_euro_discount ?? 100,
         theme: data.theme || DEFAULT_THEME,
       });
       setLoading(false);
