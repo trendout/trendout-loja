@@ -9,6 +9,7 @@ import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
 import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
 import { applyTheme } from "../lib/colorUtils";
 import { useTrackPageView } from "../hooks/useTrackPageView";
+import { useVisitorHeartbeat } from "../hooks/useVisitorHeartbeat";
 import { usePublicCategories } from "../hooks/usePublicCategories";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import { supabase } from "../lib/supabase";
@@ -374,6 +375,7 @@ export default function Layout({ children }) {
   useInjectAnalytics(info.analyticsScripts);
   useGoogleIntegrations(info);
   useTrackPageView();
+  useVisitorHeartbeat();
 
   useEffect(() => {
     if (info.theme) applyTheme(info.theme);
