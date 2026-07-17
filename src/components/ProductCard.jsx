@@ -45,6 +45,11 @@ export default function ProductCard({ product }) {
             PROMO
           </span>
         )}
+        {product.compareAtPrice && !isUnavailable && !isOutOfStock && (
+          <span style={{ position: "absolute", top: 10, right: 10, background: T.danger, color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 4 }}>
+            −{Math.round((1 - product.basePrice / product.compareAtPrice) * 100)}%
+          </span>
+        )}
         {(isUnavailable || isOutOfStock) && (
           <span style={{ position: "absolute", top: 10, right: 10, background: "rgba(15,18,16,0.85)", color: T.muted, fontSize: 11, fontWeight: 600, padding: "3px 8px", borderRadius: 4 }}>
             {isUnavailable ? "Indisponível" : "Sem stock"}
