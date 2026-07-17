@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { LogOut, Package, Plus, Pencil, Trash2, MapPin } from "lucide-react";
+import { LogOut, Package, Plus, Pencil, Trash2, MapPin, Heart } from "lucide-react";
 import { T } from "../lib/theme";
 import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import { useMyOrders } from "../hooks/useMyOrders";
 import { useCustomerAddresses } from "../hooks/useCustomerAddresses";
 import { useMyPoints } from "../hooks/useMyPoints";
 import { useStoreInfo } from "../hooks/useStoreInfo";
+import { useFavorites } from "../hooks/useFavorites";
+import { useFavoriteProducts } from "../hooks/useFavoriteProducts";
 import Layout from "../components/Layout";
 import AddressModal from "../components/AddressModal";
+import ProductCard from "../components/ProductCard";
 
 const STATUS_LABELS = {
   pending: { label: "Pendente", color: T.muted },
@@ -129,6 +132,30 @@ function AuthForm({ signIn, signUp }) {
   );
 }
 
+function FavoritesSection() {
+  const { favoriteIds } = useFavorites();
+  const { products, loading } = useFavoriteProducts(favoriteIds);
+
+  return (
+    <div style={{ marginBottom: 40 }}>
+      <h2 style={{ fontFamily: T.fontHeading, fontSize: 20, margin: "0 0 16px", display: "flex", alignItems: "center", gap: 8 }}>
+        <Heart size={18} /> Os meus favoritos
+      </h2>
+      {loading ? (
+        <div style={{ color: T.muted, fontSize: 13 }}>A carregar...</div>
+      ) : products.length === 0 ? (
+        <div style={{ background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 10, padding: 20, color: T.muted, fontSize: 13, textAlign: "center" }}>
+          Ainda não marcaste nenhum produto como favorito — clica no coração de qualquer produto para o guardares aqui.
+        </div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16 }}>
+          {products.map((p) => <ProductCard key={p.id} product={p} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function OrderHistory({ user, signOut }) {
   const { orders, loading } = useMyOrders(user);
   const { balance: pointsBalance, loading: pointsLoading } = useMyPoints(user);
@@ -158,6 +185,8 @@ function OrderHistory({ user, signOut }) {
           </div>
         </div>
       )}
+
+      <FavoritesSection />
 
       <AddressesSection user={user} />
 

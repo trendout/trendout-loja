@@ -1,13 +1,25 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Heart } from "lucide-react";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function ProductCard({ product }) {
+  const navigate = useNavigate();
+  const { isFavorite, toggleFavorite, loggedIn } = useFavorites();
+  const favorited = isFavorite(product.id);
   const colors = [...new Set(product.variants.map((v) => v.color).filter(Boolean))];
   const totalStock = product.variants.reduce((s, v) => s + v.stock, 0);
   const isUnavailable = product.availability === "unavailable";
   const isOutOfStock = product.availability === "out_of_stock" || totalStock === 0;
+
+  const handleFavoriteClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!loggedIn) { navigate("/conta"); return; }
+    toggleFavorite(product.id);
+  };
 
   return (
     <Link to={`/produto/${product.slug}`} style={{ textDecoration: "none", color: T.text, display: "block" }}>
@@ -17,6 +29,17 @@ export default function ProductCard({ product }) {
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, fontSize: 12 }}>Sem imagem</div>
         )}
+        <button
+          onClick={handleFavoriteClick}
+          aria-label="Adicionar aos favoritos"
+          style={{
+            position: "absolute", bottom: 10, right: 10, width: 30, height: 30, borderRadius: "50%",
+            background: "rgba(15,18,16,0.6)", border: "none", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <Heart size={15} color={favorited ? T.danger : "#fff"} fill={favorited ? T.danger : "none"} />
+        </button>
         {product.compareAtPrice && (
           <span style={{ position: "absolute", top: 10, left: 10, background: T.accent, color: T.bg, fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 4 }}>
             PROMO

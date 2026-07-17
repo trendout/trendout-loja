@@ -1,12 +1,13 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Truck, AlertCircle } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Truck, AlertCircle, Heart } from "lucide-react";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
 import { useProduct } from "../hooks/useProduct";
 import { useRelatedProducts } from "../hooks/useRelatedProducts";
 import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useCart } from "../hooks/useCart";
+import { useFavorites } from "../hooks/useFavorites";
 import ProductGallery from "../components/ProductGallery";
 import ProductCard from "../components/ProductCard";
 import Layout from "../components/Layout";
@@ -16,6 +17,8 @@ export default function ProductPage({ slug }) {
   const { info } = useStoreInfo();
   const { products: related } = useRelatedProducts(product?.category, product?.id, 4);
   const { addItem } = useCart();
+  const { isFavorite, toggleFavorite, loggedIn } = useFavorites();
+  const navigate = useNavigate();
 
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -70,7 +73,16 @@ export default function ProductPage({ slug }) {
               <span>{product.brand || "Trendout"}</span>
               {product.reference && <span>Ref. {product.reference}{activeColor ? `-${activeColor.slice(0, 3).toUpperCase()}` : ""}</span>}
             </div>
-            <h1 style={{ fontFamily: T.fontHeading, fontSize: 30, letterSpacing: 0.5, margin: "0 0 14px" }}>{product.name}</h1>
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+              <h1 style={{ fontFamily: T.fontHeading, fontSize: 30, letterSpacing: 0.5, margin: "0 0 14px" }}>{product.name}</h1>
+              <button
+                onClick={() => { if (!loggedIn) { navigate("/conta"); return; } toggleFavorite(product.id); }}
+                aria-label="Adicionar aos favoritos"
+                style={{ background: "none", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+              >
+                <Heart size={18} color={isFavorite(product.id) ? T.danger : T.muted} fill={isFavorite(product.id) ? T.danger : "none"} />
+              </button>
+            </div>
 
             <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 16 }}>
               <span style={{ fontSize: 24, fontWeight: 700, color: product.compareAtPrice ? T.accent : T.text }}>€{product.basePrice.toFixed(2)}</span>
