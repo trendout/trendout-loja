@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Truck, AlertCircle, Heart } from "lucide-react";
+import { Truck, AlertCircle, Heart, Copy, Check } from "lucide-react";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
 import { useProduct } from "../hooks/useProduct";
@@ -23,6 +23,7 @@ export default function ProductPage({ slug }) {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [qty, setQty] = useState(1);
+  const [couponCopied, setCouponCopied] = useState(false);
   const [added, setAdded] = useState(false);
 
   const colors = useMemo(() => product ? [...new Set(product.variants.map((v) => v.color).filter(Boolean))] : [], [product]);
@@ -92,8 +93,22 @@ export default function ProductPage({ slug }) {
             {product.couponCode && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(201,255,63,0.08)", border: `1px solid ${T.accent}55`, borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 13 }}>
                 <span>Cupão disponível para este produto:</span>
-                <span style={{ fontWeight: 700, color: T.accent, letterSpacing: 0.5 }}>{product.couponCode}</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(product.couponCode);
+                    setCouponCopied(true);
+                    setTimeout(() => setCouponCopied(false), 1800);
+                  }}
+                  style={{ display: "flex", alignItems: "center", gap: 6, background: "none", border: "none", cursor: "pointer", padding: 0, fontWeight: 700, color: T.accent, letterSpacing: 0.5, fontSize: 13 }}
+                  title="Copiar cupão"
+                >
+                  {product.couponCode}
+                  {couponCopied ? <Check size={14} /> : <Copy size={14} />}
+                </button>
               </div>
+            )}
+            {couponCopied && (
+              <div style={{ color: T.accent, fontSize: 12, marginTop: -10, marginBottom: 14 }}>Cupão copiado ✓</div>
             )}
 
             <div style={{ display: "flex", alignItems: "flex-start", gap: 10, color: T.muted, fontSize: 13, marginBottom: 24, lineHeight: 1.5 }}>
