@@ -310,32 +310,32 @@ export default function CheckoutPage() {
               <StepHeader number={2} title="Morada de envio" />
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
                 <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={labelStyle}>Nome completo</label>
-                  <input style={fieldStyle} value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="O teu nome" />
+                  <label style={labelStyle} htmlFor="checkout-name">Nome completo</label>
+                  <input id="checkout-name" name="name" autoComplete="name" style={fieldStyle} value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="O teu nome" />
                 </div>
                 <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={labelStyle}>Email</label>
-                  <input style={fieldStyle} type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="o.teu@email.com" />
+                  <label style={labelStyle} htmlFor="checkout-email">Email</label>
+                  <input id="checkout-email" name="email" autoComplete="email" style={fieldStyle} type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="o.teu@email.com" />
                 </div>
                 <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={labelStyle}>Telemóvel</label>
-                  <input style={fieldStyle} value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+351 912 345 678" />
+                  <label style={labelStyle} htmlFor="checkout-phone">Telemóvel</label>
+                  <input id="checkout-phone" name="tel" autoComplete="tel" style={fieldStyle} value={form.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+351 912 345 678" />
                 </div>
                 <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={labelStyle}>Morada</label>
-                  <input style={fieldStyle} value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="Rua, número, andar" />
+                  <label style={labelStyle} htmlFor="checkout-address">Morada</label>
+                  <input id="checkout-address" name="address-line1" autoComplete="address-line1" style={fieldStyle} value={form.address} onChange={(e) => update("address", e.target.value)} placeholder="Rua, número, andar" />
                 </div>
                 <div>
-                  <label style={labelStyle}>Código postal</label>
-                  <input style={fieldStyle} value={form.postal} onChange={(e) => update("postal", e.target.value)} placeholder="0000-000" />
+                  <label style={labelStyle} htmlFor="checkout-postal">Código postal</label>
+                  <input id="checkout-postal" name="postal-code" autoComplete="postal-code" style={fieldStyle} value={form.postal} onChange={(e) => update("postal", e.target.value)} placeholder="0000-000" />
                 </div>
                 <div>
-                  <label style={labelStyle}>Cidade</label>
-                  <input style={fieldStyle} value={form.city} onChange={(e) => update("city", e.target.value)} placeholder="ex: Lisboa" />
+                  <label style={labelStyle} htmlFor="checkout-city">Cidade</label>
+                  <input id="checkout-city" name="address-level2" autoComplete="address-level2" style={fieldStyle} value={form.city} onChange={(e) => update("city", e.target.value)} placeholder="ex: Lisboa" />
                 </div>
                 <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={labelStyle}>País</label>
-                  <select style={fieldStyle} value={form.country} onChange={(e) => update("country", e.target.value)}>
+                  <label style={labelStyle} htmlFor="checkout-country">País</label>
+                  <select id="checkout-country" name="country" autoComplete="country-name" style={fieldStyle} value={form.country} onChange={(e) => update("country", e.target.value)}>
                     {COUNTRIES.map((c) => <option key={c.code} value={c.code}>{c.label}</option>)}
                   </select>
                 </div>

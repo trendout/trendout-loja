@@ -26,18 +26,18 @@ export default function AddressModal({ address, onClose, onSave }) {
           <button onClick={onClose} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={18} /></button>
         </div>
 
-        <input style={fieldStyle} placeholder="Nome da morada (ex: Casa, Trabalho)" value={form.label} onChange={(e) => setForm((f) => ({ ...f, label: e.target.value }))} />
-        <input style={fieldStyle} placeholder="Nome completo" value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} />
-        <input style={fieldStyle} placeholder="Telemóvel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
-        <input style={fieldStyle} placeholder="Morada" value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} />
+        <input name="address-label" autoComplete="off" style={fieldStyle} placeholder="Nome da morada (ex: Casa, Trabalho)" value={form.label} onChange={(e) => setForm((f) => ({ ...f, label: e.target.value }))} />
+        <input name="name" autoComplete="name" style={fieldStyle} placeholder="Nome completo" value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} />
+        <input name="tel" autoComplete="tel" style={fieldStyle} placeholder="Telemóvel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+        <input name="address-line1" autoComplete="address-line1" style={fieldStyle} placeholder="Morada" value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} />
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          <input style={fieldStyle} placeholder="Código postal" value={form.postalCode} onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))} />
-          <input style={fieldStyle} placeholder="Cidade" value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} />
+          <input name="postal-code" autoComplete="postal-code" style={fieldStyle} placeholder="Código postal" value={form.postalCode} onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))} />
+          <input name="address-level2" autoComplete="address-level2" style={fieldStyle} placeholder="Cidade" value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} />
         </div>
-        <select style={fieldStyle} value={form.country} onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))}>
+        <select name="country" autoComplete="country-name" style={fieldStyle} value={form.country} onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))}>
           {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
-        <input style={fieldStyle} placeholder="NIF (opcional, para fatura)" value={form.nif} onChange={(e) => setForm((f) => ({ ...f, nif: e.target.value }))} />
+        <input name="nif" autoComplete="off" style={fieldStyle} placeholder="NIF (opcional, para fatura)" value={form.nif} onChange={(e) => setForm((f) => ({ ...f, nif: e.target.value }))} />
 
         <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: T.muted, marginBottom: 10, cursor: "pointer" }}>
           <input type="checkbox" checked={form.isDefaultShipping} onChange={(e) => setForm((f) => ({ ...f, isDefaultShipping: e.target.checked }))} style={{ accentColor: T.accent }} />

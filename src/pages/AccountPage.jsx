@@ -111,10 +111,10 @@ function AuthForm({ signIn, signUp }) {
       </p>
       <form onSubmit={submit}>
         {mode === "signup" && (
-          <input style={fieldStyle} placeholder="Nome completo" value={name} onChange={(e) => setName(e.target.value)} />
+          <input name="name" autoComplete="name" style={fieldStyle} placeholder="Nome completo" value={name} onChange={(e) => setName(e.target.value)} />
         )}
-        <input style={fieldStyle} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input style={fieldStyle} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input name="email" autoComplete="email" style={fieldStyle} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input name="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} style={fieldStyle} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         {error && <div style={{ color: T.danger, fontSize: 12.5, marginBottom: 12 }}>{error}</div>}
         {info && <div style={{ color: T.accent, fontSize: 12.5, marginBottom: 12 }}>{info}</div>}
         <button type="submit" style={{ width: "100%", background: T.accent, color: T.bg, border: "none", borderRadius: 8, padding: "13px 18px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
