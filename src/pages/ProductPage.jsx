@@ -85,10 +85,16 @@ export default function ProductPage({ slug }) {
               </button>
             </div>
 
-            <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 4 }}>
               <span style={{ fontSize: 24, fontWeight: 700, color: product.compareAtPrice ? T.accent : T.text }}>€{product.basePrice.toFixed(2)}</span>
               {product.compareAtPrice && <span style={{ fontSize: 16, color: T.muted, textDecoration: "line-through" }}>€{product.compareAtPrice.toFixed(2)}</span>}
             </div>
+
+            {info.loyaltyPointsEnabled && (
+              <div style={{ fontSize: 12.5, color: T.muted, marginBottom: 16 }}>
+                Ganha <strong style={{ color: T.accent }}>{Math.round(product.basePrice * (info.pointsPerEuroSpent || 2))} pontos</strong> ao comprar este produto
+              </div>
+            )}
 
             {product.couponCode && (
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(201,255,63,0.08)", border: `1px solid ${T.accent}55`, borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 13 }}>
