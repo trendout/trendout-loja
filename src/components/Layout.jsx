@@ -10,6 +10,7 @@ import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
 import { applyTheme } from "../lib/colorUtils";
 import { useTrackPageView } from "../hooks/useTrackPageView";
 import { useVisitorHeartbeat } from "../hooks/useVisitorHeartbeat";
+import { useCartSync } from "../hooks/useCartSync";
 import { usePublicCategories } from "../hooks/usePublicCategories";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import { supabase } from "../lib/supabase";
@@ -376,6 +377,7 @@ export default function Layout({ children }) {
   useGoogleIntegrations(info);
   useTrackPageView();
   useVisitorHeartbeat();
+  useCartSync();
 
   useEffect(() => {
     if (info.theme) applyTheme(info.theme);
