@@ -8,6 +8,7 @@ import { useRelatedProducts } from "../hooks/useRelatedProducts";
 import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useCart } from "../hooks/useCart";
 import { useFavorites } from "../hooks/useFavorites";
+import { useSeo, truncateForMeta } from "../hooks/useSeo";
 import ProductGallery from "../components/ProductGallery";
 import ProductCard from "../components/ProductCard";
 import Layout from "../components/Layout";
@@ -38,6 +39,14 @@ export default function ProductPage({ slug }) {
   useEffect(() => {
     if (activeVariant && qty > activeVariant.stock) setQty(Math.max(1, activeVariant.stock));
   }, [activeVariant]); // eslint-disable-line
+
+  const storeName = info.storeName || "Trendout";
+  useSeo({
+    title: product ? `${product.name} — ${storeName}` : `A carregar... — ${storeName}`,
+    description: product
+      ? truncateForMeta(product.description) || `Compra ${product.name} na ${storeName}. Envio rápido, portes grátis a partir de €${info.freeShippingThreshold || 40}.`
+      : "",
+  });
 
   if (loading) return <Layout><div style={{ color: T.muted, padding: 60, textAlign: "center" }}>A carregar produto...</div></Layout>;
   if (error || !product) return <Layout><div style={{ color: T.danger, padding: 60, textAlign: "center" }}>Produto não encontrado.</div></Layout>;

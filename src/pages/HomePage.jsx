@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { T } from "../lib/theme";
 import { usePublicMenus } from "../hooks/usePublicMenus";
 import { useStoreInfo } from "../hooks/useStoreInfo";
+import { useSeo } from "../hooks/useSeo";
 import { supabase } from "../lib/supabase";
 import Layout from "../components/Layout";
 import HeroCarousel from "../components/HeroCarousel";
@@ -62,6 +63,11 @@ function NewsletterSection() {
 export default function HomePage() {
   const { menus, loading } = usePublicMenus();
   const { info } = useStoreInfo();
+
+  useSeo({
+    title: `${info.storeName || "Trendout"} — Roupa e acessórios de treino`,
+    description: "Roupa e acessórios de treino desenhados e enviados a partir de Portugal. Vestuário técnico, garrafas e equipamento para quem não abranda.",
+  });
   const mainNav = menus.main_nav || [];
   const topCategoryNames = [...new Set(mainNav.filter((i) => i.linkType === "category").map((i) => i.value))];
 

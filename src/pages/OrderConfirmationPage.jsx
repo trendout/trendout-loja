@@ -3,9 +3,11 @@ import { Link, useSearchParams } from "react-router-dom";
 import { T } from "../lib/theme";
 import { supabase } from "../lib/supabase";
 import { useCart } from "../hooks/useCart";
+import { useSeo } from "../hooks/useSeo";
 import Layout from "../components/Layout";
 
 export default function OrderConfirmationPage() {
+  useSeo({ title: "Encomenda confirmada — Trendout", noindex: true });
   const [searchParams] = useSearchParams();
   const orderNumber = searchParams.get("order");
   const { clear } = useCart();

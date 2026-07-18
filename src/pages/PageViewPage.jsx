@@ -1,10 +1,21 @@
 import React from "react";
 import { T } from "../lib/theme";
 import { usePageBySlug } from "../hooks/usePageBySlug";
+import { useStoreInfo } from "../hooks/useStoreInfo";
+import { useSeo, truncateForMeta } from "../hooks/useSeo";
 import Layout from "../components/Layout";
 
 export default function PageViewPage({ slug }) {
   const { page, loading, error } = usePageBySlug(slug);
+  const { info } = useStoreInfo();
+
+  const storeName = info.storeName || "Trendout";
+  useSeo({
+    title: page ? `${page.title} — ${storeName}` : `A carregar... — ${storeName}`,
+    description: page
+      ? page.metaDescription || truncateForMeta(page.content) || `${page.title} — ${storeName}.`
+      : "",
+  });
 
   if (loading) {
     return <Layout><div style={{ color: T.muted, padding: 60, textAlign: "center" }}>A carregar...</div></Layout>;

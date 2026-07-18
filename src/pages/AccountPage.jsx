@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { LogOut, Package, Plus, Pencil, Trash2, MapPin, Heart } from "lucide-react";
+import { useSeo } from "../hooks/useSeo";
 import { T } from "../lib/theme";
 import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import { useMyOrders } from "../hooks/useMyOrders";
@@ -237,6 +238,7 @@ function OrderHistory({ user, signOut }) {
 
 export default function AccountPage() {
   const { user, loading, signUp, signIn, signOut } = useCustomerAuth();
+  useSeo({ title: "A minha conta — Trendout", noindex: true });
 
   return (
     <Layout>

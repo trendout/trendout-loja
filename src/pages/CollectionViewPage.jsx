@@ -3,6 +3,8 @@ import { SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
 import { useCollectionBySlug } from "../hooks/useCollectionBySlug";
+import { useStoreInfo } from "../hooks/useStoreInfo";
+import { useSeo, truncateForMeta } from "../hooks/useSeo";
 import ProductCard from "../components/ProductCard";
 import Layout from "../components/Layout";
 
@@ -31,6 +33,15 @@ function FilterSection({ title, children }) {
 
 export default function CollectionViewPage({ slug }) {
   const { collection, products, loading, error } = useCollectionBySlug(slug);
+  const { info } = useStoreInfo();
+
+  const storeName = info.storeName || "Trendout";
+  useSeo({
+    title: collection ? `${collection.name} — ${storeName}` : `A carregar... — ${storeName}`,
+    description: collection
+      ? truncateForMeta(collection.description) || `Descobre a coleção ${collection.name} na ${storeName}.`
+      : "",
+  });
 
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);

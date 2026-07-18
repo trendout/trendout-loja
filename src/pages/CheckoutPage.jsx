@@ -11,6 +11,7 @@ import { supabase } from "../lib/supabase";
 import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import { useCustomerAddresses } from "../hooks/useCustomerAddresses";
 import { useMyPoints } from "../hooks/useMyPoints";
+import { useSeo } from "../hooks/useSeo";
 import AddressModal from "../components/AddressModal";
 import Layout from "../components/Layout";
 
@@ -57,6 +58,7 @@ function StepHeader({ number, title }) {
 }
 
 export default function CheckoutPage() {
+  useSeo({ title: "Checkout — Trendout", noindex: true });
   const { items, updateQty, removeItem, subtotal } = useCart();
   const { rates, loading: ratesLoading } = useShippingRates();
   const { rates: vatRates } = useVatRates();

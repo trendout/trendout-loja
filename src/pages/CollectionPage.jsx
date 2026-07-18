@@ -3,6 +3,8 @@ import { SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
 import { useCollectionProducts } from "../hooks/useCollectionProducts";
+import { useStoreInfo } from "../hooks/useStoreInfo";
+import { useSeo } from "../hooks/useSeo";
 import ProductCard from "../components/ProductCard";
 import Layout from "../components/Layout";
 
@@ -31,6 +33,12 @@ function FilterSection({ title, children }) {
 
 export default function CollectionPage({ categoryName = "T-shirts técnicas", title }) {
   const { products, loading, error } = useCollectionProducts(categoryName);
+  const { info } = useStoreInfo();
+
+  useSeo({
+    title: `${title || categoryName} — ${info.storeName || "Trendout"}`,
+    description: `Descobre a coleção ${title || categoryName} na ${info.storeName || "Trendout"} — filtra por tamanho, cor e preço.`,
+  });
 
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
