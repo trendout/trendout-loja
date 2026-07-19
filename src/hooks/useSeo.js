@@ -29,6 +29,49 @@ export function useSeo({ title, description, noindex = false } = {}) {
 }
 
 /**
+ * Insere os dados estruturados (JSON-LD) de um produto — etiquetas invisíveis
+ * que ajudam o Google a mostrar preço/disponibilidade diretamente nos
+ * resultados de pesquisa. Remove-se sozinho quando a página muda.
+ */
+export function useProductJsonLd(product, productUrl) {
+  useEffect(() => {
+    if (!product) return;
+
+    const totalStock = (product.variants || []).reduce((s, v) => s + (v.stock || 0), 0);
+    const availability = product.availability === "unavailable" || totalStock === 0
+      ? "https://schema.org/OutOfStock"
+      : "https://schema.org/InStock";
+
+    const data = {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      name: product.name,
+      description: product.description || undefined,
+      image: product.images && product.images.length ? product.images : undefined,
+      brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
+      offers: {
+        "@type": "Offer",
+        url: productUrl,
+        priceCurrency: "EUR",
+        price: product.basePrice,
+        availability,
+      },
+    };
+
+    let script = document.getElementById("product-jsonld");
+    if (!script) {
+      script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.id = "product-jsonld";
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(data);
+
+    return () => { script?.remove(); };
+  }, [product, productUrl]);
+}
+
+/**
  * Corta um texto num limite de caracteres sem cortar a meio de uma palavra —
  * útil para gerar uma meta descrição a partir de uma descrição mais longa.
  */
