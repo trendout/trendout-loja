@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Truck, AlertCircle, Heart, Copy, Check } from "lucide-react";
+import { Truck, AlertCircle, Heart, Copy, Check, Share2 } from "lucide-react";
 import { T } from "../lib/theme";
 import { colorToHex } from "../lib/colors";
 import { useProduct } from "../hooks/useProduct";
@@ -25,6 +25,7 @@ export default function ProductPage({ slug }) {
   const [selectedSize, setSelectedSize] = useState(null);
   const [qty, setQty] = useState(1);
   const [couponCopied, setCouponCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
   const [added, setAdded] = useState(false);
 
   const colors = useMemo(() => product ? [...new Set(product.variants.map((v) => v.color).filter(Boolean))] : [], [product]);
@@ -85,15 +86,30 @@ export default function ProductPage({ slug }) {
             </div>
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
               <h1 style={{ fontFamily: T.fontHeading, fontSize: 30, letterSpacing: 0.5, margin: "0 0 14px" }}>{product.name}</h1>
-              <button
-                onClick={() => { if (!loggedIn) { navigate("/conta"); return; } toggleFavorite(product.id); }}
-                aria-label="Adicionar aos favoritos"
-                style={{ background: "none", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
-              >
-                <Heart size={18} color={isFavorite(product.id) ? T.danger : T.muted} fill={isFavorite(product.id) ? T.danger : "none"} />
-              </button>
+              <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                <button
+                  onClick={() => {
+                    const shareUrl = `https://pszcuasqxbatsltzdxpf.supabase.co/functions/v1/share-product?slug=${product.slug}`;
+                    navigator.clipboard.writeText(shareUrl);
+                    setShareCopied(true);
+                    setTimeout(() => setShareCopied(false), 1800);
+                  }}
+                  aria-label="Copiar link de partilha"
+                  title="Copiar link para partilhar (com foto/preço no Facebook, WhatsApp, etc.)"
+                  style={{ background: "none", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
+                  {shareCopied ? <Check size={16} color={T.accent} /> : <Share2 size={16} color={T.muted} />}
+                </button>
+                <button
+                  onClick={() => { if (!loggedIn) { navigate("/conta"); return; } toggleFavorite(product.id); }}
+                  aria-label="Adicionar aos favoritos"
+                  style={{ background: "none", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
+                  <Heart size={18} color={isFavorite(product.id) ? T.danger : T.muted} fill={isFavorite(product.id) ? T.danger : "none"} />
+                </button>
+              </div>
             </div>
-
+            {shareCopied && <div style={{ color: T.accent, fontSize: 12, marginTop: -10, marginBottom: 10 }}>Link de partilha copiado ✓</div>}
             <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 4 }}>
               <span style={{ fontSize: 24, fontWeight: 700, color: product.compareAtPrice ? T.accent : T.text }}>€{product.basePrice.toFixed(2)}</span>
               {product.compareAtPrice && <span style={{ fontSize: 16, color: T.muted, textDecoration: "line-through" }}>€{product.compareAtPrice.toFixed(2)}</span>}
