@@ -90,13 +90,13 @@ export default function ProductPage({ slug }) {
               <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                 <button
                   onClick={() => {
-                    const shareUrl = `https://pszcuasqxbatsltzdxpf.supabase.co/functions/v1/share-product?slug=${product.slug}`;
+                    const shareUrl = `https://loja.trendout.pt/produto/${product.slug}`;
                     navigator.clipboard.writeText(shareUrl);
                     setShareCopied(true);
                     setTimeout(() => setShareCopied(false), 1800);
                   }}
                   aria-label="Copiar link de partilha"
-                  title="Copiar link para partilhar (com foto/preço no Facebook, WhatsApp, etc.)"
+                  title="Copiar link para partilhar"
                   style={{ background: "none", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                 >
                   {shareCopied ? <Check size={16} color={T.accent} /> : <Share2 size={16} color={T.muted} />}
