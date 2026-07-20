@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /conta
+Disallow: /carrinho
+Disallow: /checkout
+Disallow: /checkout/sucesso
+
+Sitemap: https://pszcuasqxbatsltzdxpf.supabase.co/functions/v1/sitemap
