@@ -255,7 +255,19 @@ export default function CheckoutPage() {
             <h1 style={{ fontFamily: T.fontHeading, fontSize: 28, margin: "0 0 12px" }}>Encomenda recebida!</h1>
             <p style={{ color: T.muted, fontSize: 14, marginBottom: 20 }}>
               Número da encomenda: <strong style={{ color: T.accent }}>{placedOrder.order_number}</strong><br />
-              Enviamos-te o IBAN e a referência de pagamento por email/telefone em breve.
+              {paymentMethod === "mbway" ? (
+                info.mbwayPhone ? (
+                  <>Envia o valor total por MB WAY para o número <strong style={{ color: T.text }}>{info.mbwayPhone}</strong>, usando o número da encomenda como referência.</>
+                ) : (
+                  <>Enviamos-te o número para pagares por MB WAY, por email, em breve.</>
+                )
+              ) : (
+                info.companyIban ? (
+                  <>Transfere o valor total para o IBAN <strong style={{ color: T.text }}>{info.companyIban}</strong>, usando o número da encomenda como referência.</>
+                ) : (
+                  <>Enviamos-te o IBAN e a referência de pagamento por email/telefone em breve.</>
+                )
+              )}
             </p>
             <Link to="/" style={{ color: T.accent, textDecoration: "none", fontSize: 13.5 }}>← Voltar à loja</Link>
           </div>
