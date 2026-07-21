@@ -31,6 +31,7 @@ export function useStoreInfo() {
         enableMultibanco: data.enable_multibanco,
         multibancoEntity: data.multibanco_entity || "",
         enableMbway: data.enable_mbway,
+        mbwayPhone: data.mbway_phone || "",
         googleSiteVerification: data.google_site_verification || "",
         enableGoogleAds: data.enable_google_ads,
         googleAdsConversionId: data.google_ads_conversion_id || "",

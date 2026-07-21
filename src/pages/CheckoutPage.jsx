@@ -178,7 +178,7 @@ export default function CheckoutPage() {
           vat_rate_percent: vatRatePercent,
           vat_amount: vatAmount,
           status: "pending",
-          payment_method: paymentMethod === "card" ? "card" : "bank_transfer",
+          payment_method: paymentMethod === "card" ? "card" : paymentMethod === "mbway" ? "mbway" : "bank_transfer",
           payment_status: "unpaid",
           coupon_code: coupon?.code || null,
           discount_amount: discount,
@@ -484,12 +484,12 @@ export default function CheckoutPage() {
                 </label>
               )}
               {info.enableMbway && (
-                <label style={{ display: "flex", alignItems: "center", gap: 12, padding: 16, borderRadius: 10, border: `1px solid ${T.border}`, cursor: "not-allowed", marginBottom: 10, opacity: 0.6 }}>
-                  <input type="radio" disabled style={{ accentColor: T.accent }} />
+                <label style={{ display: "flex", alignItems: "center", gap: 12, padding: 16, borderRadius: 10, border: `1px solid ${paymentMethod === "mbway" ? T.accent : T.border}`, background: paymentMethod === "mbway" ? "rgba(201,255,63,0.05)" : "none", cursor: "pointer", marginBottom: 10 }}>
+                  <input type="radio" checked={paymentMethod === "mbway"} onChange={() => setPaymentMethod("mbway")} style={{ accentColor: T.accent }} />
                   <Smartphone size={20} color={T.muted} />
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 13.5, fontWeight: 600 }}>MB WAY</div>
-                    <div style={{ fontSize: 12, color: T.muted }}>Disponível brevemente</div>
+                    <div style={{ fontSize: 12, color: T.muted }}>Paga pelo telemóvel, com o número abaixo</div>
                   </div>
                 </label>
               )}
@@ -504,6 +504,22 @@ export default function CheckoutPage() {
                     <>
                       Após confirmares a encomenda, enviamos-te o <strong style={{ color: T.text }}>IBAN</strong> e a referência de pagamento.
                       A encomenda só segue para produção depois de recebermos a transferência.
+                    </>
+                  )}
+                </div>
+              )}
+              {paymentMethod === "mbway" && (
+                <div style={{ background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 8, padding: 14, fontSize: 12.5, color: T.muted, lineHeight: 1.6 }}>
+                  {info.mbwayPhone ? (
+                    <>
+                      Envia o valor total da encomenda por MB WAY para o número <strong style={{ color: T.accent }}>{info.mbwayPhone}</strong>,
+                      e no descritivo coloca o número da tua encomenda. Estas instruções também vão no email de confirmação.
+                      A encomenda só segue para produção depois de recebermos o pagamento.
+                    </>
+                  ) : (
+                    <>
+                      Após confirmares a encomenda, enviamos-te o número para pagares por MB WAY.
+                      A encomenda só segue para produção depois de recebermos o pagamento.
                     </>
                   )}
                 </div>
