@@ -43,6 +43,9 @@ export function useStoreInfo() {
         loyaltyPointsEnabled: data.loyalty_points_enabled,
         pointsPerEuroSpent: data.points_per_euro_spent ?? 2,
         pointsPerEuroDiscount: data.points_per_euro_discount ?? 100,
+        promoPopupEnabled: data.promo_popup_enabled,
+        promoPopupMessage: data.promo_popup_message || "",
+        promoPopupCouponCode: data.promo_popup_coupon_code || "",
         theme: data.theme || DEFAULT_THEME,
       });
       setLoading(false);

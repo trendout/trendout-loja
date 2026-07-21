@@ -8,6 +8,7 @@ import { useCart } from "../hooks/useCart";
 import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
 import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
 import { applyTheme } from "../lib/colorUtils";
+import PromoPopup from "./PromoPopup";
 import { useTrackPageView } from "../hooks/useTrackPageView";
 import { useVisitorHeartbeat } from "../hooks/useVisitorHeartbeat";
 import { useCartSync } from "../hooks/useCartSync";
@@ -408,6 +409,10 @@ export default function Layout({ children }) {
 
       {!loading && info.maintenanceModeEnabled && (
         <MaintenanceOverlay message={info.maintenanceMessage} />
+      )}
+
+      {!loading && !info.maintenanceModeEnabled && info.promoPopupEnabled && info.promoPopupMessage && info.promoPopupCouponCode && (
+        <PromoPopup message={info.promoPopupMessage} couponCode={info.promoPopupCouponCode} />
       )}
 
       <style>{`
