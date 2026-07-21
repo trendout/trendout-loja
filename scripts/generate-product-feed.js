@@ -30,11 +30,36 @@ function stripHtml(str) {
   return String(str || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
+/**
+ * Confirma se um código cumpre as regras do GTIN que o Google exige:
+ * só dígitos, 8/12/13/14 caracteres, e dígito de verificação correto.
+ * Se não cumprir, é melhor omitir o campo do que enviar um código inválido.
+ */
+function isValidGtin(code) {
+  if (!code) return false;
+  const clean = String(code).trim();
+  if (!/^\d+$/.test(clean)) return false;
+  if (![8, 12, 13, 14].includes(clean.length)) return false;
+
+  const digits = clean.split("").map(Number);
+  const checkDigit = digits.pop();
+  let sum = 0;
+  digits.reverse().forEach((d, i) => { sum += d * (i % 2 === 0 ? 3 : 1); });
+  const calculated = (10 - (sum % 10)) % 10;
+  return calculated === checkDigit;
+}
+
 async function main() {
   const products = await fetchTable(
     "products",
     "select=id,name,slug,brand,ean,description,base_price,compare_at_price,availability,images,is_active,product_variants(stock)&is_active=eq.true"
   );
+
+  const invalidEans = products.filter((p) => p.ean && !isValidGtin(p.ean));
+  if (invalidEans.length > 0) {
+    console.warn(`⚠ ${invalidEans.length} produto(s) com EAN inválido (ignorado no feed, corrige no backoffice):`);
+    invalidEans.forEach((p) => console.warn(`  - ${p.name}: "${p.ean}"`));
+  }
 
   const items = products.map((p) => {
     const totalStock = (p.product_variants || []).reduce((s, v) => s + (v.stock || 0), 0);
@@ -53,7 +78,7 @@ async function main() {
     <g:price>${Number(p.base_price).toFixed(2)} EUR</g:price>
     <g:condition>new</g:condition>
     <g:brand>${escapeXml(p.brand || STORE_NAME)}</g:brand>
-    ${p.ean ? `<g:gtin>${escapeXml(p.ean)}</g:gtin>` : ""}
+    ${isValidGtin(p.ean) ? `<g:gtin>${escapeXml(p.ean.trim())}</g:gtin>` : `<g:identifier_exists>no</g:identifier_exists>`}
   </item>`;
   }).join("\n");
 
