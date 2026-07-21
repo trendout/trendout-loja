@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { T } from "../lib/theme";
 import { supabase } from "../lib/supabase";
 import { useCart } from "../hooks/useCart";
 import { useSeo } from "../hooks/useSeo";
+import { useStoreInfo } from "../hooks/useStoreInfo";
+import { trackGoogleAdsConversion } from "../hooks/useGoogleIntegrations";
 import Layout from "../components/Layout";
 
 export default function OrderConfirmationPage() {
@@ -11,8 +13,10 @@ export default function OrderConfirmationPage() {
   const [searchParams] = useSearchParams();
   const orderNumber = searchParams.get("order");
   const { clear } = useCart();
+  const { info } = useStoreInfo();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const trackedRef = useRef(false);
 
   useEffect(() => {
     // o webhook do Stripe pode demorar 1-2 segundos a confirmar o pagamento — tentamos
@@ -50,6 +54,14 @@ export default function OrderConfirmationPage() {
     poll();
     return () => { cancelled = true; };
   }, [orderNumber]); // eslint-disable-line
+
+  useEffect(() => {
+    if (trackedRef.current) return;
+    if (order?.payment_status === "paid" && info) {
+      trackGoogleAdsConversion(info, Number(order.total), order.order_number);
+      trackedRef.current = true;
+    }
+  }, [order, info]);
 
   return (
     <Layout>
