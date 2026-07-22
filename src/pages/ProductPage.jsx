@@ -8,9 +8,11 @@ import { useRelatedProducts } from "../hooks/useRelatedProducts";
 import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useCart } from "../hooks/useCart";
 import { useFavorites } from "../hooks/useFavorites";
+import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import { useSeo, truncateForMeta, useProductJsonLd } from "../hooks/useSeo";
 import ProductGallery from "../components/ProductGallery";
 import ProductCard from "../components/ProductCard";
+import ProductReviews from "../components/ProductReviews";
 import Layout from "../components/Layout";
 
 export default function ProductPage({ slug }) {
@@ -19,6 +21,7 @@ export default function ProductPage({ slug }) {
   const { products: related } = useRelatedProducts(product?.category, product?.id, 4);
   const { addItem } = useCart();
   const { isFavorite, toggleFavorite, loggedIn } = useFavorites();
+  const { user } = useCustomerAuth();
   const navigate = useNavigate();
 
   const [selectedColor, setSelectedColor] = useState(null);
@@ -270,6 +273,10 @@ export default function ProductPage({ slug }) {
             )}
           </div>
         </div>
+      </div>
+
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px" }}>
+        <ProductReviews productId={product.id} user={user} />
       </div>
 
       {related.length > 0 && (
