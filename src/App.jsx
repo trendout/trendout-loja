@@ -1,5 +1,5 @@
-import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+import React, { Suspense, lazy, useEffect } from "react";
+import { BrowserRouter, Routes, Route, useParams, useLocation } from "react-router-dom";
 import { CartProvider } from "./hooks/useCart";
 import { FavoritesProvider } from "./hooks/useFavorites";
 import { T } from "./lib/theme";
@@ -42,11 +42,23 @@ function RouteFallback() {
   return <div style={{ minHeight: "60vh", background: T.bg }} />; // fundo igual ao da loja, sem "flash" branco enquanto carrega
 }
 
+// Ao contrário de sites tradicionais, esta loja muda de página sem recarregar
+// o browser — por isso o scroll fica onde estava, mesmo ao abrires um produto
+// novo. Isto repõe sempre o topo quando o URL muda.
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <CartProvider>
       <FavoritesProvider>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
+          <ScrollToTop />
           <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
