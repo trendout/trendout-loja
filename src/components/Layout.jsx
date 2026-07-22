@@ -8,7 +8,7 @@ import { useCart } from "../hooks/useCart";
 import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
 import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
 import { applyTheme } from "../lib/colorUtils";
-import PromoPopup from "./PromoPopup";
+const PromoPopup = React.lazy(() => import("./PromoPopup"));
 import { useTrackPageView } from "../hooks/useTrackPageView";
 import { useVisitorHeartbeat } from "../hooks/useVisitorHeartbeat";
 import { useCartSync } from "../hooks/useCartSync";
@@ -78,7 +78,7 @@ function SearchBox() {
                     style={{ display: "flex", alignItems: "center", gap: 10, padding: 8, borderRadius: 8, textDecoration: "none", color: T.text }}
                   >
                     <div style={{ width: 40, height: 40, borderRadius: 6, overflow: "hidden", background: T.bgRaised2, flexShrink: 0 }}>
-                      {p.images?.[0] && <img src={p.images[0]} alt={p.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                      {p.images?.[0] && <img src={p.images[0]} alt={p.name} loading="lazy" width={40} height={40} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
@@ -131,7 +131,7 @@ function NavDropdown({ categoryName }) {
               {products.map((p) => (
                 <Link key={p.id} to={`/produto/${p.slug}`} className="hover-accent" style={{ textDecoration: "none", color: T.text, width: 92 }}>
                   <div style={{ width: 92, height: 92, borderRadius: 8, overflow: "hidden", background: T.bgRaised2, marginBottom: 6 }}>
-                    {p.images?.[0] && <img src={p.images[0]} alt={p.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                    {p.images?.[0] && <img src={p.images[0]} alt={p.name} loading="lazy" width={92} height={92} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                   </div>
                   <div style={{ fontSize: 11.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
                   <div style={{ fontSize: 11.5, color: T.accent, fontWeight: 700 }}>€{p.basePrice.toFixed(2)}</div>
@@ -156,7 +156,7 @@ function SiteHeader({ mainNav, onOpenMenu }) {
         </button>
 
         <Link to="/" style={{ display: "flex" }}>
-          <img src={logo} alt="Trendout" style={{ height: 52 }} />
+          <img src={logo} alt="Trendout" width={188} height={52} style={{ height: 52, width: "auto" }} />
         </Link>
 
         <nav className="desktop-nav" style={{ display: "flex", gap: 28 }}>
@@ -252,7 +252,7 @@ function MobileDrawer({ mainNav, onClose }) {
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 100, display: "flex" }}>
       <div style={{ background: T.bg, width: "min(300px, 85vw)", height: "100%", padding: 24, borderRight: `1px solid ${T.border}`, overflowY: "auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-          <img src={logo} alt="Trendout" style={{ height: 44 }} />
+          <img src={logo} alt="Trendout" width={159} height={44} style={{ height: 44, width: "auto" }} />
           <button onClick={onClose} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={22} /></button>
         </div>
         <nav style={{ display: "flex", flexDirection: "column", gap: 18 }}>
@@ -287,7 +287,7 @@ function SiteFooter({ footerLoja, footerAjuda, footerLegal, info }) {
       <div className="footer-grid" style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 24px 24px", display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 32 }}>
         <div>
           <div style={{ marginBottom: 12 }}>
-            <img src={logo} alt="Trendout" style={{ height: 48 }} />
+            <img src={logo} alt="Trendout" width={174} height={48} style={{ height: 48, width: "auto" }} />
           </div>
           {info.showCompanyInfoFooter !== false && (
             <div style={{ color: T.muted, fontSize: 13, lineHeight: 1.7 }}>
@@ -412,7 +412,9 @@ export default function Layout({ children }) {
       )}
 
       {!loading && !info.maintenanceModeEnabled && info.promoPopupEnabled && info.promoPopupMessage && info.promoPopupCouponCode && (
-        <PromoPopup message={info.promoPopupMessage} couponCode={info.promoPopupCouponCode} />
+        <React.Suspense fallback={null}>
+          <PromoPopup message={info.promoPopupMessage} couponCode={info.promoPopupCouponCode} />
+        </React.Suspense>
       )}
 
       <style>{`

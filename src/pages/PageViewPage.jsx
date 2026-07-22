@@ -33,6 +33,8 @@ export default function PageViewPage({ slug }) {
           <img
             src={page.featuredImage}
             alt={page.title}
+            width={1200}
+            height={360}
             style={{ width: "100%", maxHeight: 360, objectFit: "cover", borderRadius: 12, marginBottom: 28 }}
           />
         )}

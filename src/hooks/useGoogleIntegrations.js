@@ -8,28 +8,39 @@ export function useGoogleIntegrations(info) {
     if (!info?.googleSiteVerification && !info?.enableGoogleAds) return;
     injected.current = true;
 
-    if (info.googleSiteVerification) {
-      const meta = document.createElement("meta");
-      meta.name = "google-site-verification";
-      meta.content = info.googleSiteVerification;
-      document.head.appendChild(meta);
-    }
+    const inject = () => {
+      if (info.googleSiteVerification) {
+        const meta = document.createElement("meta");
+        meta.name = "google-site-verification";
+        meta.content = info.googleSiteVerification;
+        document.head.appendChild(meta);
+      }
 
-    if (info.enableGoogleAds && info.googleAdsConversionId) {
-      const s1 = document.createElement("script");
-      s1.async = true;
-      s1.src = `https://www.googletagmanager.com/gtag/js?id=${info.googleAdsConversionId}`;
-      document.head.appendChild(s1);
+      if (info.enableGoogleAds && info.googleAdsConversionId) {
+        const s1 = document.createElement("script");
+        s1.async = true;
+        s1.src = `https://www.googletagmanager.com/gtag/js?id=${info.googleAdsConversionId}`;
+        document.head.appendChild(s1);
 
-      const s2 = document.createElement("script");
-      s2.text = `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '${info.googleAdsConversionId}');
-      `;
-      document.head.appendChild(s2);
+        const s2 = document.createElement("script");
+        s2.text = `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${info.googleAdsConversionId}');
+        `;
+        document.head.appendChild(s2);
+      }
+    };
+
+    // adiada até a página estar pronta, para não competir com o primeiro desenho
+    if (document.readyState === "complete") {
+      const timer = setTimeout(inject, 1000);
+      return () => clearTimeout(timer);
     }
+    const onLoad = () => setTimeout(inject, 1000);
+    window.addEventListener("load", onLoad, { once: true });
+    return () => window.removeEventListener("load", onLoad);
   }, [info?.googleSiteVerification, info?.enableGoogleAds, info?.googleAdsConversionId]);
 }
 

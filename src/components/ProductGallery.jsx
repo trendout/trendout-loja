@@ -12,7 +12,7 @@ export default function ProductGallery({ images, productName }) {
     <div>
       <div style={{ position: "relative", aspectRatio: "1/1", background: T.bgRaised, borderRadius: 12, overflow: "hidden" }}>
         {list[index] ? (
-          <img src={list[index]} alt={productName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src={list[index]} alt={productName} width={800} height={800} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted }}>Sem imagem</div>
         )}
@@ -45,7 +45,7 @@ export default function ProductGallery({ images, productName }) {
                 border: `2px solid ${i === index ? T.accent : T.border}`, background: T.bgRaised,
               }}
             >
-              {img && <img src={img} alt={`${productName} — foto ${i + 1}`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+              {img && <img src={img} alt={`${productName} — foto ${i + 1}`} loading="lazy" width={60} height={60} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
             </button>
           ))}
         </div>

@@ -25,7 +25,7 @@ export default function ProductCard({ product }) {
     <Link to={`/produto/${product.slug}`} style={{ textDecoration: "none", color: T.text, display: "block" }}>
       <div style={{ position: "relative", aspectRatio: "3/4", background: T.bgRaised, borderRadius: 10, overflow: "hidden", marginBottom: 10 }}>
         {product.images[0] ? (
-          <img src={product.images[0]} alt={product.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src={product.images[0]} alt={product.name} loading="lazy" width={400} height={533} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, fontSize: 12 }}>Sem imagem</div>
         )}

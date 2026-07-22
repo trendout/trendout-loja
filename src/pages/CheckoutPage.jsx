@@ -295,7 +295,7 @@ export default function CheckoutPage() {
                   {items.map((i) => (
                     <div key={i.key} style={{ display: "flex", gap: 14, background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 10, padding: 14 }}>
                       <div style={{ width: 68, height: 68, borderRadius: 8, overflow: "hidden", background: T.bgRaised2, flexShrink: 0 }}>
-                        {i.image && <img src={i.image} alt={i.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                        {i.image && <img src={i.image} alt={i.name} width={68} height={68} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                       </div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: 600, fontSize: 13.5 }}>{i.name}</div>
