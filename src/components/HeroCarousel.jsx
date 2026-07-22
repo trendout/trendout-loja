@@ -58,12 +58,12 @@ export default function HeroCarousel() {
       {slides.length > 1 && (
         <>
           <div style={{ position: "absolute", top: "50%", left: 20, transform: "translateY(-50%)", zIndex: 3 }}>
-            <button onClick={() => go(-1)} style={{ background: "rgba(15,18,16,0.5)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <button onClick={() => go(-1)} aria-label="Slide anterior" style={{ background: "rgba(15,18,16,0.5)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ChevronLeft size={18} />
             </button>
           </div>
           <div style={{ position: "absolute", top: "50%", right: 20, transform: "translateY(-50%)", zIndex: 3 }}>
-            <button onClick={() => go(1)} style={{ background: "rgba(15,18,16,0.5)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <button onClick={() => go(1)} aria-label="Slide seguinte" style={{ background: "rgba(15,18,16,0.5)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 40, height: 40, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ChevronRight size={18} />
             </button>
           </div>
