@@ -186,7 +186,7 @@ function SiteHeader({ mainNav, onOpenMenu }) {
           <Link to="/conta" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center" }} aria-label="A minha conta">
             <User size={18} />
           </Link>
-          <Link to="/carrinho" className="hover-accent" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, position: "relative" }}>
+          <Link to="/carrinho" className="hover-accent" aria-label="Carrinho" style={{ color: T.text, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, position: "relative" }}>
             <ShoppingBag size={17} />
             <span className="cart-label">Carrinho</span>
             {totalQty > 0 && (
