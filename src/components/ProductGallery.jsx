@@ -45,7 +45,7 @@ export default function ProductGallery({ images, productName }) {
                 border: `2px solid ${i === index ? T.accent : T.border}`, background: T.bgRaised,
               }}
             >
-              {img && <img src={img} alt={`${productName} — foto ${i + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+              {img && <img src={img} alt={`${productName} — foto ${i + 1}`} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
             </button>
           ))}
         </div>

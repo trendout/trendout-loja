@@ -78,7 +78,7 @@ function SearchBox() {
                     style={{ display: "flex", alignItems: "center", gap: 10, padding: 8, borderRadius: 8, textDecoration: "none", color: T.text }}
                   >
                     <div style={{ width: 40, height: 40, borderRadius: 6, overflow: "hidden", background: T.bgRaised2, flexShrink: 0 }}>
-                      {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                      {p.images?.[0] && <img src={p.images[0]} alt={p.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
@@ -131,7 +131,7 @@ function NavDropdown({ categoryName }) {
               {products.map((p) => (
                 <Link key={p.id} to={`/produto/${p.slug}`} className="hover-accent" style={{ textDecoration: "none", color: T.text, width: 92 }}>
                   <div style={{ width: 92, height: 92, borderRadius: 8, overflow: "hidden", background: T.bgRaised2, marginBottom: 6 }}>
-                    {p.images?.[0] && <img src={p.images[0]} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                    {p.images?.[0] && <img src={p.images[0]} alt={p.name} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                   </div>
                   <div style={{ fontSize: 11.5, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</div>
                   <div style={{ fontSize: 11.5, color: T.accent, fontWeight: 700 }}>€{p.basePrice.toFixed(2)}</div>

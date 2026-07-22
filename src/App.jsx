@@ -1,15 +1,21 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import { CartProvider } from "./hooks/useCart";
 import { FavoritesProvider } from "./hooks/useFavorites";
+import { T } from "./lib/theme";
 import HomePage from "./pages/HomePage";
-import CollectionPage from "./pages/CollectionPage";
-import CollectionViewPage from "./pages/CollectionViewPage";
-import PageViewPage from "./pages/PageViewPage";
-import ProductPage from "./pages/ProductPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import AccountPage from "./pages/AccountPage";
-import OrderConfirmationPage from "./pages/OrderConfirmationPage";
+
+// A homepage carrega já com o pacote principal (é a página mais visitada,
+// sem intervalo de espera). Todas as outras só carregam o código delas
+// quando alguém navega mesmo até lá — reduz bastante o que é preciso
+// descarregar na primeira visita.
+const CollectionPage = lazy(() => import("./pages/CollectionPage"));
+const CollectionViewPage = lazy(() => import("./pages/CollectionViewPage"));
+const PageViewPage = lazy(() => import("./pages/PageViewPage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
+const AccountPage = lazy(() => import("./pages/AccountPage"));
+const OrderConfirmationPage = lazy(() => import("./pages/OrderConfirmationPage"));
 
 function ProductRoute() {
   const { slug } = useParams();
@@ -32,22 +38,28 @@ function PageRoute() {
   return <PageViewPage slug={slug} />;
 }
 
+function RouteFallback() {
+  return <div style={{ minHeight: "60vh", background: T.bg }} />; // fundo igual ao da loja, sem "flash" branco enquanto carrega
+}
+
 export default function App() {
   return (
     <CartProvider>
       <FavoritesProvider>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/categoria/:categoryName" element={<CollectionRoute />} />
-            <Route path="/coleccao/:slug" element={<CollectionViewRoute />} />
-            <Route path="/pagina/:slug" element={<PageRoute />} />
-            <Route path="/produto/:slug" element={<ProductRoute />} />
-            <Route path="/carrinho" element={<CheckoutPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/conta" element={<AccountPage />} />
-            <Route path="/checkout/sucesso" element={<OrderConfirmationPage />} />
-          </Routes>
+          <Suspense fallback={<RouteFallback />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/categoria/:categoryName" element={<CollectionRoute />} />
+              <Route path="/coleccao/:slug" element={<CollectionViewRoute />} />
+              <Route path="/pagina/:slug" element={<PageRoute />} />
+              <Route path="/produto/:slug" element={<ProductRoute />} />
+              <Route path="/carrinho" element={<CheckoutPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/conta" element={<AccountPage />} />
+              <Route path="/checkout/sucesso" element={<OrderConfirmationPage />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </FavoritesProvider>
     </CartProvider>
