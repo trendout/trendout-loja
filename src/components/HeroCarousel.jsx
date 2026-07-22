@@ -72,6 +72,7 @@ export default function HeroCarousel() {
               <button
                 key={i}
                 onClick={() => { clearInterval(timerRef.current); setIndex(i); }}
+                aria-label={`Ver imagem ${i + 1} de ${slides.length}`}
                 style={{ width: i === index ? 22 : 8, height: 8, borderRadius: 4, border: "none", background: i === index ? T.accent : "rgba(255,255,255,0.4)", cursor: "pointer", transition: "width .2s" }}
               />
             ))}

@@ -23,7 +23,7 @@ export default function AddressModal({ address, onClose, onSave }) {
       <div style={{ width: "100%", maxWidth: 440, background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 14, padding: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
           <h3 style={{ margin: 0, fontFamily: T.fontHeading, fontSize: 20 }}>{address ? "Editar morada" : "Nova morada"}</h3>
-          <button onClick={onClose} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={18} /></button>
+          <button onClick={onClose} aria-label="Fechar" style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={18} /></button>
         </div>
 
         <input name="address-label" autoComplete="off" style={fieldStyle} placeholder="Nome da morada (ex: Casa, Trabalho)" value={form.label} onChange={(e) => setForm((f) => ({ ...f, label: e.target.value }))} />

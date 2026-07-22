@@ -19,10 +19,10 @@ export default function ProductGallery({ images, productName }) {
 
         {list.length > 1 && (
           <>
-            <button onClick={() => go(-1)} style={{ position: "absolute", top: "50%", left: 12, transform: "translateY(-50%)", background: "rgba(15,18,16,0.6)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 36, height: 36, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <button onClick={() => go(-1)} aria-label="Foto anterior" style={{ position: "absolute", top: "50%", left: 12, transform: "translateY(-50%)", background: "rgba(15,18,16,0.6)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 36, height: 36, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ChevronLeft size={16} />
             </button>
-            <button onClick={() => go(1)} style={{ position: "absolute", top: "50%", right: 12, transform: "translateY(-50%)", background: "rgba(15,18,16,0.6)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 36, height: 36, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <button onClick={() => go(1)} aria-label="Foto seguinte" style={{ position: "absolute", top: "50%", right: 12, transform: "translateY(-50%)", background: "rgba(15,18,16,0.6)", border: `1px solid ${T.border}`, borderRadius: "50%", width: 36, height: 36, color: T.text, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ChevronRight size={16} />
             </button>
             <div style={{ position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 6 }}>

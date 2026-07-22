@@ -151,7 +151,7 @@ function SiteHeader({ mainNav, onOpenMenu }) {
   return (
     <header style={{ borderBottom: `1px solid ${T.border}`, position: "sticky", top: 0, background: T.bg, zIndex: 50 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "18px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <button onClick={onOpenMenu} className="hamburger-btn" style={{ display: "none", background: "none", border: "none", color: T.text, cursor: "pointer" }}>
+        <button onClick={onOpenMenu} className="hamburger-btn" aria-label="Abrir menu" style={{ display: "none", background: "none", border: "none", color: T.text, cursor: "pointer" }}>
           <MenuIcon size={22} />
         </button>
 
@@ -253,7 +253,7 @@ function MobileDrawer({ mainNav, onClose }) {
       <div style={{ background: T.bg, width: "min(300px, 85vw)", height: "100%", padding: 24, borderRight: `1px solid ${T.border}`, overflowY: "auto" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
           <img src={logo} alt="Trendout" width={159} height={44} style={{ height: 44, width: "auto" }} />
-          <button onClick={onClose} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={22} /></button>
+          <button onClick={onClose} aria-label="Fechar menu" style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={22} /></button>
         </div>
         <nav style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           {mainNav.map((item, idx) => (

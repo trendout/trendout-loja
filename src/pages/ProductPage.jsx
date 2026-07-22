@@ -178,6 +178,7 @@ export default function ProductPage({ slug }) {
                           <button
                             key={c}
                             title={c}
+                            aria-label={`Cor: ${c}`}
                             onClick={() => { setSelectedColor(c); setSelectedSize(null); }}
                             style={{
                               width: 34, height: 34, borderRadius: "50%", cursor: "pointer",

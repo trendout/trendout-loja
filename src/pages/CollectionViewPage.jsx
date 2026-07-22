@@ -235,7 +235,7 @@ export default function CollectionViewPage({ slug }) {
           <div style={{ background: T.bg, width: "min(320px, 85vw)", height: "100%", padding: 24, overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
               <span style={{ fontFamily: T.fontHeading, fontSize: 20 }}>Filtros</span>
-              <button onClick={() => setMobileFiltersOpen(false)} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={20} /></button>
+              <button onClick={() => setMobileFiltersOpen(false)} aria-label="Fechar filtros" style={{ background: "none", border: "none", color: T.muted, cursor: "pointer" }}><X size={20} /></button>
             </div>
             {FiltersPanel}
           </div>
