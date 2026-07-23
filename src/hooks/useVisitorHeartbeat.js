@@ -15,7 +15,7 @@ function getSessionId() {
 // Localização aproximada (cidade/país) a partir do IP público — só se pede
 // uma vez por sessão (fica em cache), nunca identifica a pessoa, só a zona
 // geográfica de onde está a aceder.
-async function getApproxLocation() {
+export async function getApproxLocation() {
   const cached = sessionStorage.getItem("trendout_geo");
   if (cached) return JSON.parse(cached);
 

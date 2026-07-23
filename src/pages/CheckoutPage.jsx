@@ -12,6 +12,7 @@ import { useCustomerAuth } from "../hooks/useCustomerAuth";
 import { useCustomerAddresses } from "../hooks/useCustomerAddresses";
 import { useMyPoints } from "../hooks/useMyPoints";
 import { useSeo } from "../hooks/useSeo";
+import { getApproxLocation } from "../hooks/useVisitorHeartbeat";
 import AddressModal from "../components/AddressModal";
 import Layout from "../components/Layout";
 
@@ -160,6 +161,7 @@ export default function CheckoutPage() {
       if (addrErr) throw addrErr;
 
       const { data: { user: sessionUser } } = await supabase.auth.getUser();
+      const orderGeo = await getApproxLocation();
 
       const orderId = crypto.randomUUID();
       const orderNumber = `TRD-${Math.floor(10000 + Math.random() * 89999)}`;
@@ -186,6 +188,11 @@ export default function CheckoutPage() {
           subtotal,
           shipping_cost: shippingCost || 0,
           total,
+          order_ip_city: orderGeo.city,
+          order_ip_country: orderGeo.country,
+          order_ip_country_code: orderGeo.countryCode,
+          order_ip_lat: orderGeo.latitude,
+          order_ip_lng: orderGeo.longitude,
         });
       if (orderErr) throw orderErr;
 
