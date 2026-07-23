@@ -7,6 +7,7 @@ import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useCart } from "../hooks/useCart";
 import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
 import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
+import { useMetaPixel } from "../hooks/useMetaPixel";
 import { applyTheme } from "../lib/colorUtils";
 const PromoPopup = React.lazy(() => import("./PromoPopup"));
 import { useTrackPageView } from "../hooks/useTrackPageView";
@@ -376,6 +377,7 @@ export default function Layout({ children }) {
 
   useInjectAnalytics(info.analyticsScripts);
   useGoogleIntegrations(info);
+  useMetaPixel(info.metaPixelId);
   useTrackPageView();
   useVisitorHeartbeat();
   useCartSync();

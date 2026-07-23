@@ -6,6 +6,7 @@ import { useCart } from "../hooks/useCart";
 import { useSeo } from "../hooks/useSeo";
 import { useStoreInfo } from "../hooks/useStoreInfo";
 import { trackGoogleAdsConversion } from "../hooks/useGoogleIntegrations";
+import { trackMetaPurchase } from "../hooks/useMetaPixel";
 import Layout from "../components/Layout";
 
 export default function OrderConfirmationPage() {
@@ -59,6 +60,7 @@ export default function OrderConfirmationPage() {
     if (trackedRef.current) return;
     if (order?.payment_status === "paid" && info) {
       trackGoogleAdsConversion(info, Number(order.total), order.order_number);
+      trackMetaPurchase(Number(order.total), order.order_number);
       trackedRef.current = true;
     }
   }, [order, info]);
