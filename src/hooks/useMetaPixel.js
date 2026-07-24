@@ -47,3 +47,19 @@ export function trackMetaPurchase(value, orderNumber) {
     content_ids: [orderNumber],
   });
 }
+
+/**
+ * Regista "Adicionar ao carrinho" — chamar sempre que um produto é
+ * adicionado, de qualquer página. Ajuda o Facebook a criar públicos de
+ * remarketing (quem quase comprou, mas não chegou a finalizar).
+ */
+export function trackMetaAddToCart(product, value) {
+  if (typeof window.fbq !== "function") return;
+  window.fbq("track", "AddToCart", {
+    content_ids: [product.id],
+    content_name: product.name,
+    content_type: "product",
+    value: Number(value),
+    currency: "EUR",
+  });
+}
