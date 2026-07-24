@@ -13,10 +13,11 @@ function getSessionId() {
   return id;
 }
 
-export function useTrackPageView() {
+export function useTrackPageView(analyticsConsent) {
   const location = useLocation();
 
   useEffect(() => {
+    if (!analyticsConsent) return;
     supabase.from("page_views").insert({
       path: location.pathname,
       session_id: getSessionId(),
@@ -24,5 +25,5 @@ export function useTrackPageView() {
     }).then(({ error }) => {
       if (error) console.error("Erro ao registar visita:", error.message);
     });
-  }, [location.pathname]);
+  }, [location.pathname, analyticsConsent]);
 }

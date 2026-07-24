@@ -13,6 +13,8 @@ const PromoPopup = React.lazy(() => import("./PromoPopup"));
 import { useTrackPageView } from "../hooks/useTrackPageView";
 import { useVisitorHeartbeat } from "../hooks/useVisitorHeartbeat";
 import { useCartSync } from "../hooks/useCartSync";
+import { useCookieConsent } from "../hooks/useCookieConsent";
+import CookieBanner from "./CookieBanner";
 import { usePublicCategories } from "../hooks/usePublicCategories";
 import { useCategoryProducts } from "../hooks/useCategoryProducts";
 import { supabase } from "../lib/supabase";
@@ -323,8 +325,19 @@ function SiteFooter({ footerLoja, footerAjuda, footerLegal, info }) {
       </div>
       <div style={{ borderTop: `1px solid ${T.border}`, padding: "16px 24px", textAlign: "center", fontSize: 11.5, color: T.muted }}>
         © {new Date().getFullYear()} Trendout. Todos os direitos reservados.
+        {" · "}
+        <CookieSettingsLink />
       </div>
     </footer>
+  );
+}
+
+function CookieSettingsLink() {
+  const { openSettings } = useCookieConsent();
+  return (
+    <button onClick={openSettings} style={{ background: "none", border: "none", color: T.muted, textDecoration: "underline", cursor: "pointer", fontSize: 11.5, padding: 0 }}>
+      Definições de cookies
+    </button>
   );
 }
 
@@ -375,11 +388,13 @@ export default function Layout({ children }) {
   const { info, loading: infoLoading } = useStoreInfo();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  useInjectAnalytics(info.analyticsScripts);
-  useGoogleIntegrations(info);
-  useMetaPixel(info.metaPixelId);
-  useTrackPageView();
-  useVisitorHeartbeat();
+  const { consent } = useCookieConsent();
+
+  useInjectAnalytics((consent?.analytics || consent?.marketing) ? info.analyticsScripts : null);
+  useGoogleIntegrations(info, consent?.marketing);
+  useMetaPixel(info.metaPixelId, consent?.marketing);
+  useTrackPageView(consent?.analytics);
+  useVisitorHeartbeat(consent?.analytics);
   useCartSync();
 
   useEffect(() => {
@@ -418,6 +433,8 @@ export default function Layout({ children }) {
           <PromoPopup message={info.promoPopupMessage} couponCode={info.promoPopupCouponCode} />
         </React.Suspense>
       )}
+
+      <CookieBanner />
 
       <style>{`
         .hover-accent { transition: color .15s; }

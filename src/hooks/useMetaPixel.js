@@ -5,11 +5,11 @@ import { useEffect, useRef } from "react";
  * pronta, tal como já fazemos com o Google Ads, para não competir com o
  * primeiro desenho da página.
  */
-export function useMetaPixel(pixelId) {
+export function useMetaPixel(pixelId, marketingConsent) {
   const injected = useRef(false);
 
   useEffect(() => {
-    if (!pixelId || injected.current) return;
+    if (!pixelId || !marketingConsent || injected.current) return;
     injected.current = true;
 
     const inject = () => {
@@ -31,7 +31,7 @@ export function useMetaPixel(pixelId) {
     const onLoad = () => setTimeout(inject, 1200);
     window.addEventListener("load", onLoad, { once: true });
     return () => window.removeEventListener("load", onLoad);
-  }, [pixelId]);
+  }, [pixelId, marketingConsent]);
 }
 
 /**

@@ -37,12 +37,13 @@ export async function getApproxLocation() {
   }
 }
 
-export function useVisitorHeartbeat() {
+export function useVisitorHeartbeat(analyticsConsent) {
   const location = useLocation();
   const { items, subtotal } = useCart();
   const geoRef = useRef(null);
 
   useEffect(() => {
+    if (!analyticsConsent) return;
     let cancelled = false;
     let interval;
 
@@ -72,5 +73,5 @@ export function useVisitorHeartbeat() {
     interval = setInterval(beat, 10000); // a cada 10 segundos
 
     return () => { cancelled = true; clearInterval(interval); };
-  }, [location.pathname, items.length, subtotal]);
+  }, [location.pathname, items.length, subtotal, analyticsConsent]);
 }

@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useParams, useLocation } from "react-router-dom";
 import { CartProvider } from "./hooks/useCart";
 import { FavoritesProvider } from "./hooks/useFavorites";
+import { CookieConsentProvider } from "./hooks/useCookieConsent";
 import { T } from "./lib/theme";
 import HomePage from "./pages/HomePage";
 
@@ -57,6 +58,7 @@ export default function App() {
   return (
     <CartProvider>
       <FavoritesProvider>
+        <CookieConsentProvider>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
           <ScrollToTop />
           <Suspense fallback={<RouteFallback />}>
@@ -73,6 +75,7 @@ export default function App() {
             </Routes>
           </Suspense>
         </BrowserRouter>
+        </CookieConsentProvider>
       </FavoritesProvider>
     </CartProvider>
   );
