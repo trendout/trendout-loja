@@ -10,6 +10,7 @@ import { useMyPoints } from "../hooks/useMyPoints";
 import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useFavorites } from "../hooks/useFavorites";
 import { useFavoriteProducts } from "../hooks/useFavoriteProducts";
+import { useMyAffiliateCoupons } from "../hooks/useMyAffiliateCoupons";
 import Layout from "../components/Layout";
 import AddressModal from "../components/AddressModal";
 import ProductCard from "../components/ProductCard";
@@ -160,6 +161,7 @@ function FavoritesSection() {
 function OrderHistory({ user, signOut }) {
   const { orders, loading } = useMyOrders(user);
   const { balance: pointsBalance, loading: pointsLoading } = useMyPoints(user);
+  const { coupons: affiliateCoupons, loading: affiliateLoading } = useMyAffiliateCoupons(user);
   const { info } = useStoreInfo();
 
   return (
@@ -184,6 +186,34 @@ function OrderHistory({ user, signOut }) {
             {info.pointsPerEuroDiscount > 0 &&
               `Usa-os no checkout — cada ${info.pointsPerEuroDiscount} pontos valem €1 de desconto.`}
           </div>
+        </div>
+      )}
+
+      {!affiliateLoading && affiliateCoupons.length > 0 && (
+        <div style={{ background: T.bgRaised, border: `1px solid ${T.border}`, borderRadius: 12, padding: 20, margin: "20px 0" }}>
+          <div style={{ fontSize: 11.5, color: T.muted, textTransform: "uppercase", letterSpacing: 0.4, marginBottom: 14 }}>Programa de afiliados</div>
+          {affiliateCoupons.map((c) => (
+            <div key={c.code} style={{ borderTop: `1px solid ${T.border}`, paddingTop: 14, marginTop: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <div style={{ fontFamily: T.fontHeading, fontSize: 20, letterSpacing: 0.5 }}>{c.code}</div>
+                <div style={{ fontSize: 12, color: T.muted }}>{c.rate}% por venda</div>
+              </div>
+              <div style={{ display: "flex", gap: 20, fontSize: 13 }}>
+                <div>
+                  <div style={{ color: T.muted, fontSize: 11.5 }}>Utilizações</div>
+                  <div style={{ fontWeight: 700 }}>{c.usageCount}</div>
+                </div>
+                <div>
+                  <div style={{ color: T.muted, fontSize: 11.5 }}>Por pagar</div>
+                  <div style={{ fontWeight: 700, color: T.warn }}>€{c.pendingTotal.toFixed(2)}</div>
+                </div>
+                <div>
+                  <div style={{ color: T.muted, fontSize: 11.5 }}>Já pago</div>
+                  <div style={{ fontWeight: 700, color: T.accent }}>€{c.paidTotal.toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
