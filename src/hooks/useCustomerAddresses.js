@@ -11,6 +11,7 @@ export function useCustomerAddresses(user) {
     const { data, error } = await supabase
       .from("customer_addresses")
       .select("*")
+      .eq("customer_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) { console.error(error); setLoading(false); return; }
@@ -64,7 +65,7 @@ export function useCustomerAddresses(user) {
   };
 
   const deleteAddress = async (id) => {
-    await supabase.from("customer_addresses").delete().eq("id", id);
+    await supabase.from("customer_addresses").delete().eq("id", id).eq("customer_id", user.id);
     await load();
   };
 
