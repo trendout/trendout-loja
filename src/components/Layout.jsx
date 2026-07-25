@@ -8,6 +8,7 @@ import { useCart } from "../hooks/useCart";
 import { useInjectAnalytics } from "../hooks/useInjectAnalytics";
 import { useGoogleIntegrations } from "../hooks/useGoogleIntegrations";
 import { useMetaPixel } from "../hooks/useMetaPixel";
+import { useGA4 } from "../hooks/useGA4";
 import { applyTheme } from "../lib/colorUtils";
 const PromoPopup = React.lazy(() => import("./PromoPopup"));
 import { useTrackPageView } from "../hooks/useTrackPageView";
@@ -393,6 +394,7 @@ export default function Layout({ children }) {
   useInjectAnalytics((consent?.analytics || consent?.marketing) ? info.analyticsScripts : null);
   useGoogleIntegrations(info, consent?.marketing);
   useMetaPixel(info.metaPixelId, consent?.marketing);
+  useGA4(info.ga4MeasurementId, consent?.analytics);
   useTrackPageView(consent?.analytics);
   useVisitorHeartbeat(consent?.analytics);
   useCartSync();

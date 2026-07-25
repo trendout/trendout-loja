@@ -37,6 +37,7 @@ export function useStoreInfo() {
         googleAdsConversionId: data.google_ads_conversion_id || "",
         googleAdsConversionLabel: data.google_ads_conversion_label || "",
         metaPixelId: data.meta_pixel_id || "",
+        ga4MeasurementId: data.ga4_measurement_id || "",
         homepageProductsPerCategory: data.homepage_products_per_category ?? 8,
         maintenanceModeEnabled: data.maintenance_mode_enabled,
         maintenanceMessage: data.maintenance_message || "",
