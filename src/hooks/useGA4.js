@@ -37,3 +37,30 @@ export function useGA4(measurementId, analyticsConsent) {
     return () => window.removeEventListener("load", onLoad);
   }, [measurementId, analyticsConsent]);
 }
+
+/**
+ * Regista uma compra no GA4 — chamar na página de confirmação, quando o
+ * pagamento for confirmado. Não faz nada se o GA4 ainda não tiver
+ * carregado (ex: sem consentimento de análises, ou ainda a carregar).
+ */
+export function trackGA4Purchase(value, orderNumber) {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("event", "purchase", {
+    transaction_id: orderNumber,
+    value: Number(value),
+    currency: "EUR",
+  });
+}
+
+/**
+ * Regista "Adicionar ao carrinho" no GA4 — chamar sempre que um produto é
+ * adicionado, de qualquer página.
+ */
+export function trackGA4AddToCart(product, value) {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("event", "add_to_cart", {
+    currency: "EUR",
+    value: Number(value),
+    items: [{ item_id: product.id, item_name: product.name, price: product.basePrice }],
+  });
+}

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { trackMetaAddToCart } from "./useMetaPixel";
+import { trackGA4AddToCart } from "./useGA4";
 
 const CartContext = createContext(null);
 const STORAGE_KEY = "trendout_cart";
@@ -23,6 +24,7 @@ export function CartProvider({ children }) {
 
   const addItem = (product, variant, qty = 1) => {
     trackMetaAddToCart(product, product.basePrice * qty);
+    trackGA4AddToCart(product, product.basePrice * qty);
     const key = keyOf(product.id, variant.size, variant.color);
     setItems((prev) => {
       const existing = prev.find((i) => i.key === key);
