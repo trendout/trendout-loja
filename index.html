@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="pt">
   <head>
+    <script>
+      // O GitHub Pages por vezes acrescenta uma barra no fim de URLs profundos
+      // (ex: /produto/x/) — isto remove-a antes da app React arrancar, para a
+      // navegação interna reconhecer sempre a rota certa.
+      if (location.pathname.length > 1 && location.pathname.endsWith('/')) {
+        history.replaceState(null, '', location.pathname.slice(0, -1) + location.search + location.hash);
+      }
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trendout — Roupa e acessórios de treino</title>
