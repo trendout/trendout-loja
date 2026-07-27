@@ -15,7 +15,7 @@ export function useProduct(slug) {
 
       const { data, error: err } = await supabase
         .from("products")
-        .select("*, product_variants(*)")
+        .select("*, product_variants(*), categories!category_id(size_guide_url)")
         .eq("slug", slug)
         .eq("is_active", true)
         .single();
@@ -38,6 +38,7 @@ export function useProduct(slug) {
         weightGrams: data.weight_grams,
         description: data.description,
         features: data.features || [],
+        sizeGuideUrl: data.categories?.size_guide_url || "",
         topCategory: data.top_category,
         category: data.category,
         basePrice: Number(data.base_price),

@@ -197,7 +197,11 @@ export default function ProductPage({ slug }) {
                 <div style={{ marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
                     <span style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5 }}>Tamanho</span>
-                    <a href="#" style={{ fontSize: 12.5, color: T.accent, textDecoration: "none" }}>Guia de tamanhos</a>
+                    {product.sizeGuideUrl && (
+                      <a href={product.sizeGuideUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12.5, color: T.accent, textDecoration: "none" }}>
+                        Guia de tamanhos
+                      </a>
+                    )}
                   </div>
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     {sizesForColor.map((v) => {
