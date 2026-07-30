@@ -20,6 +20,7 @@ export function useShippingRates() {
           standardEta: r.standard_eta,
           expressEta: r.express_eta,
           freeEligible: r.free_eligible,
+          freeShippingThreshold: r.free_shipping_threshold != null ? Number(r.free_shipping_threshold) : null,
         };
       });
       setRates(map);

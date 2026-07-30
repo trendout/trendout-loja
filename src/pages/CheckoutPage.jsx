@@ -90,6 +90,7 @@ export default function CheckoutPage() {
 
   const freeShippingThreshold = info.freeShippingThreshold || 40;
   const countryRate = rates[form.country];
+  const effectiveFreeShippingThreshold = countryRate?.freeShippingThreshold ?? freeShippingThreshold;
 
   // extrai o maior número de dias úteis do texto da tarifa (ex: "2-4 dias úteis" -> 4)
   // e soma isso à data de hoje, para dar uma estimativa de entrega real
@@ -107,9 +108,9 @@ export default function CheckoutPage() {
   const shippingCost = useMemo(() => {
     if (!addressReady || !countryRate) return null;
     const base = shippingSpeed === "express" ? countryRate.express : countryRate.standard;
-    if (shippingSpeed === "standard" && countryRate.freeEligible && subtotal >= freeShippingThreshold) return 0;
+    if (shippingSpeed === "standard" && countryRate.freeEligible && subtotal >= effectiveFreeShippingThreshold) return 0;
     return base;
-  }, [addressReady, countryRate, shippingSpeed, subtotal, freeShippingThreshold]);
+  }, [addressReady, countryRate, shippingSpeed, subtotal, effectiveFreeShippingThreshold]);
 
   const discount = computeDiscount(coupon, subtotal);
   const pointsRate = info.pointsPerEuroDiscount || 100;
@@ -118,8 +119,8 @@ export default function CheckoutPage() {
   const total = Math.max(0, subtotal - discount - pointsDiscount + (shippingCost || 0));
   const vatRatePercent = vatRates[form.country] ?? null;
   const vatAmount = vatRatePercent !== null ? +(total - total / (1 + vatRatePercent / 100)).toFixed(2) : null;
-  const progressPct = Math.min(100, (subtotal / freeShippingThreshold) * 100);
-  const remaining = Math.max(0, freeShippingThreshold - subtotal);
+  const progressPct = Math.min(100, (subtotal / effectiveFreeShippingThreshold) * 100);
+  const remaining = Math.max(0, effectiveFreeShippingThreshold - subtotal);
 
   const update = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -448,7 +449,7 @@ export default function CheckoutPage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {["standard", "express"].map((speed) => {
                     const price = speed === "express" ? countryRate.express : countryRate.standard;
-                    const free = speed === "standard" && countryRate.freeEligible && subtotal >= freeShippingThreshold;
+                    const free = speed === "standard" && countryRate.freeEligible && subtotal >= effectiveFreeShippingThreshold;
                     const active = shippingSpeed === speed;
                     return (
                       <label key={speed} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", borderRadius: 8, border: `1px solid ${active ? T.accent : T.border}`, background: active ? "rgba(201,255,63,0.06)" : "none", cursor: "pointer" }}>
