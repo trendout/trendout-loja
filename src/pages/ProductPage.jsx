@@ -57,8 +57,9 @@ export default function ProductPage({ slug }) {
   if (error || !product) return <Layout><div style={{ color: T.danger, padding: 60, textAlign: "center" }}>Produto não encontrado.</div></Layout>;
 
   const isUnavailable = product.availability === "unavailable";
+  const isReserveToProduce = product.availability === "reserve_to_produce";
   const isOutOfStock = product.availability === "out_of_stock" || product.variants.every((v) => v.stock === 0);
-  const showPurchaseBlock = !isUnavailable;
+  const showPurchaseBlock = !isUnavailable && !isReserveToProduce;
 
   const stockNote = () => {
     if (!activeVariant) return "Escolhe um tamanho";
@@ -161,6 +162,20 @@ export default function ProductPage({ slug }) {
                 </div>
                 <p style={{ margin: "0 0 12px", fontSize: 13.5, color: "#cfd3cd", lineHeight: 1.5 }}>
                   Contacte-nos para mais informações ou para reservar o produto.
+                </p>
+                <div style={{ fontSize: 13.5, lineHeight: 1.7 }}>
+                  <div>{info.companyAddress}</div>
+                  <div>{info.companyPhone} · {info.companyEmail}</div>
+                </div>
+              </div>
+            ) : isReserveToProduce ? (
+              <div style={{ padding: 18, borderRadius: 12, background: "rgba(201,255,63,0.06)", border: `1px solid ${T.accent}`, marginBottom: 20 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                  <AlertCircle size={20} color={T.accent} />
+                  <strong style={{ fontSize: 15 }}>Produto por encomenda — reserva a tua produção</strong>
+                </div>
+                <p style={{ margin: "0 0 12px", fontSize: 13.5, color: "#cfd3cd", lineHeight: 1.5 }}>
+                  Este produto é feito por encomenda, em lotes de produção. Contacta-nos para garantires a tua unidade no próximo lote.
                 </p>
                 <div style={{ fontSize: 13.5, lineHeight: 1.7 }}>
                   <div>{info.companyAddress}</div>

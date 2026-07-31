@@ -12,6 +12,7 @@ export default function ProductCard({ product }) {
   const colors = [...new Set(product.variants.map((v) => v.color).filter(Boolean))];
   const totalStock = product.variants.reduce((s, v) => s + v.stock, 0);
   const isUnavailable = product.availability === "unavailable";
+  const isReserveToProduce = product.availability === "reserve_to_produce";
   const isOutOfStock = product.availability === "out_of_stock" || totalStock === 0;
 
   const handleFavoriteClick = (e) => {
@@ -45,14 +46,14 @@ export default function ProductCard({ product }) {
             PROMO
           </span>
         )}
-        {product.compareAtPrice && !isUnavailable && !isOutOfStock && (
+        {product.compareAtPrice && !isUnavailable && !isOutOfStock && !isReserveToProduce && (
           <span style={{ position: "absolute", top: 10, right: 10, background: T.danger, color: "#fff", fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 4 }}>
             −{Math.round((1 - product.basePrice / product.compareAtPrice) * 100)}%
           </span>
         )}
-        {(isUnavailable || isOutOfStock) && (
+        {(isUnavailable || isOutOfStock || isReserveToProduce) && (
           <span style={{ position: "absolute", top: 10, right: 10, background: "rgba(15,18,16,0.85)", color: T.muted, fontSize: 11, fontWeight: 600, padding: "3px 8px", borderRadius: 4 }}>
-            {isUnavailable ? "Indisponível" : "Sem stock"}
+            {isUnavailable ? "Indisponível" : isReserveToProduce ? "Por encomenda" : "Sem stock"}
           </span>
         )}
       </div>
