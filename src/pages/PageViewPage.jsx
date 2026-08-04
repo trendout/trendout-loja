@@ -4,6 +4,7 @@ import { usePageBySlug } from "../hooks/usePageBySlug";
 import { useStoreInfo } from "../hooks/useStoreInfo";
 import { useSeo, truncateForMeta } from "../hooks/useSeo";
 import Layout from "../components/Layout";
+import ShippingGlobe from "../components/ShippingGlobe";
 
 export default function PageViewPage({ slug }) {
   const { page, loading, error } = usePageBySlug(slug);
@@ -42,6 +43,8 @@ export default function PageViewPage({ slug }) {
         <h1 style={{ fontFamily: T.fontHeading, fontSize: 36, letterSpacing: 0.5, margin: "0 0 24px" }}>
           {page.title}
         </h1>
+
+        {slug === "envios" && <ShippingGlobe />}
 
         <div
           className="page-content"
