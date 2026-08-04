@@ -19,7 +19,10 @@ export function useCustomerAuth() {
   const signUp = async (email, password, fullName) => {
     const { error } = await supabase.auth.signUp({
       email, password,
-      options: { data: { full_name: fullName } },
+      options: {
+        data: { full_name: fullName },
+        emailRedirectTo: "https://loja.trendout.pt/conta",
+      },
     });
     if (error) throw error;
   };
