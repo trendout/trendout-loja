@@ -78,58 +78,123 @@ function AddressesSection({ user }) {
   );
 }
 
-function AuthForm({ signIn, signUp }) {
-  const [mode, setMode] = useState("signin"); // 'signin' | 'signup'
+function AuthForm({ signIn, signUp, requestPasswordReset }) {
+  const [mode, setMode] = useState("signin"); // 'signin' | 'signup' | 'forgot'
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const submit = async (e) => {
     e.preventDefault();
     setError("");
     setInfo("");
+    setSubmitting(true);
     try {
       if (mode === "signup") {
         await signUp(email, password, name);
         setInfo("Conta criada! Verifica o teu email para confirmar (se pedido) e depois entra.");
         setMode("signin");
+      } else if (mode === "forgot") {
+        await requestPasswordReset(email);
+        setInfo("Se existir uma conta com esse email, enviámos um link para definires uma password nova.");
       } else {
         await signIn(email, password);
       }
     } catch (err) {
       setError(err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <div style={{ maxWidth: 380, margin: "60px auto", padding: "0 24px" }}>
       <h1 style={{ fontFamily: T.fontHeading, fontSize: 28, marginBottom: 6 }}>
-        {mode === "signup" ? "Criar conta" : "Entrar na tua conta"}
+        {mode === "signup" ? "Criar conta" : mode === "forgot" ? "Recuperar password" : "Entrar na tua conta"}
       </h1>
       <p style={{ color: T.muted, fontSize: 13, marginBottom: 24 }}>
-        {mode === "signup" ? "Regista-te para veres o histórico das tuas encomendas." : "Vê o estado e o histórico das tuas encomendas."}
+        {mode === "signup"
+          ? "Regista-te para veres o histórico das tuas encomendas."
+          : mode === "forgot"
+          ? "Escreve o teu email — enviamos-te um link para definires uma password nova."
+          : "Vê o estado e o histórico das tuas encomendas."}
       </p>
       <form onSubmit={submit}>
         {mode === "signup" && (
           <input name="name" autoComplete="name" style={fieldStyle} placeholder="Nome completo" value={name} onChange={(e) => setName(e.target.value)} />
         )}
         <input name="email" autoComplete="email" style={fieldStyle} type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input name="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} style={fieldStyle} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        {mode !== "forgot" && (
+          <input name="password" autoComplete={mode === "signup" ? "new-password" : "current-password"} style={fieldStyle} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        )}
+        {mode === "signin" && (
+          <button type="button" onClick={() => { setMode("forgot"); setError(""); setInfo(""); }} style={{ background: "none", border: "none", color: T.muted, cursor: "pointer", fontSize: 12, padding: 0, marginBottom: 14, textDecoration: "underline" }}>
+            Esqueceste-te da password?
+          </button>
+        )}
         {error && <div style={{ color: T.danger, fontSize: 12.5, marginBottom: 12 }}>{error}</div>}
         {info && <div style={{ color: T.accent, fontSize: 12.5, marginBottom: 12 }}>{info}</div>}
-        <button type="submit" style={{ width: "100%", background: T.accent, color: T.bg, border: "none", borderRadius: 8, padding: "13px 18px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-          {mode === "signup" ? "Criar conta" : "Entrar"}
+        <button type="submit" disabled={submitting} style={{ width: "100%", background: T.accent, color: T.bg, border: "none", borderRadius: 8, padding: "13px 18px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+          {submitting ? "A processar..." : mode === "signup" ? "Criar conta" : mode === "forgot" ? "Enviar link de recuperação" : "Entrar"}
         </button>
       </form>
       <div style={{ marginTop: 16, fontSize: 13, color: T.muted, textAlign: "center" }}>
         {mode === "signup" ? (
           <>Já tens conta? <button onClick={() => setMode("signin")} style={{ background: "none", border: "none", color: T.accent, cursor: "pointer", padding: 0, fontSize: 13 }}>Entrar</button></>
+        ) : mode === "forgot" ? (
+          <>Lembraste-te da password? <button onClick={() => setMode("signin")} style={{ background: "none", border: "none", color: T.accent, cursor: "pointer", padding: 0, fontSize: 13 }}>Entrar</button></>
         ) : (
           <>Ainda não tens conta? <button onClick={() => setMode("signup")} style={{ background: "none", border: "none", color: T.accent, cursor: "pointer", padding: 0, fontSize: 13 }}>Criar conta</button></>
         )}
       </div>
+    </div>
+  );
+}
+
+function SetNewPasswordForm({ updatePassword }) {
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setError("");
+    if (password.length < 6) { setError("A password precisa de pelo menos 6 caracteres."); return; }
+    if (password !== confirm) { setError("As duas passwords não coincidem."); return; }
+    setSubmitting(true);
+    try {
+      await updatePassword(password);
+      setDone(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: 380, margin: "60px auto", padding: "0 24px" }}>
+      <h1 style={{ fontFamily: T.fontHeading, fontSize: 28, marginBottom: 6 }}>Definir password nova</h1>
+      {done ? (
+        <p style={{ color: T.accent, fontSize: 13.5 }}>Password atualizada com sucesso. Já podes usá-la para entrares na tua conta.</p>
+      ) : (
+        <>
+          <p style={{ color: T.muted, fontSize: 13, marginBottom: 24 }}>Escreve a tua password nova, duas vezes.</p>
+          <form onSubmit={submit}>
+            <input name="new-password" autoComplete="new-password" style={fieldStyle} type="password" placeholder="Password nova" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <input name="confirm-password" autoComplete="new-password" style={fieldStyle} type="password" placeholder="Confirmar password nova" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+            {error && <div style={{ color: T.danger, fontSize: 12.5, marginBottom: 12 }}>{error}</div>}
+            <button type="submit" disabled={submitting} style={{ width: "100%", background: T.accent, color: T.bg, border: "none", borderRadius: 8, padding: "13px 18px", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              {submitting ? "A guardar..." : "Guardar password nova"}
+            </button>
+          </form>
+        </>
+      )}
     </div>
   );
 }
@@ -267,17 +332,19 @@ function OrderHistory({ user, signOut }) {
 }
 
 export default function AccountPage() {
-  const { user, loading, signUp, signIn, signOut } = useCustomerAuth();
+  const { user, loading, signUp, signIn, signOut, passwordRecovery, requestPasswordReset, updatePassword } = useCustomerAuth();
   useSeo({ title: "A minha conta — Trendout", noindex: true });
 
   return (
     <Layout>
       {loading ? (
         <div style={{ textAlign: "center", color: T.muted, padding: 60 }}>A carregar...</div>
+      ) : passwordRecovery ? (
+        <SetNewPasswordForm updatePassword={updatePassword} />
       ) : user ? (
         <OrderHistory user={user} signOut={signOut} />
       ) : (
-        <AuthForm signIn={signIn} signUp={signUp} />
+        <AuthForm signIn={signIn} signUp={signUp} requestPasswordReset={requestPasswordReset} />
       )}
     </Layout>
   );
