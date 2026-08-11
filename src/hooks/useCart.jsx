@@ -36,6 +36,7 @@ export function CartProvider({ children }) {
         productId: product.id,
         variantId: variant.id,
         name: product.name,
+        slug: product.slug,
         image: product.images?.[0] || null,
         size: variant.size,
         color: variant.color,
