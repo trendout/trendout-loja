@@ -28,7 +28,7 @@ export function useCartSync() {
         customer_id: user.id,
         customer_email: user.email,
         items: items.map((i) => ({
-          name: i.name, size: i.size, color: i.color, price: i.price, qty: i.qty, image: i.image, productId: i.productId,
+          name: i.name, slug: i.slug, size: i.size, color: i.color, price: i.price, qty: i.qty, image: i.image, productId: i.productId,
         })),
         subtotal,
         updated_at: new Date().toISOString(),
