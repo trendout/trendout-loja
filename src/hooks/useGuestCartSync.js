@@ -22,7 +22,7 @@ export function useGuestCartSync(email, items, subtotal) {
 
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(async () => {
-      await supabase.from("cart_snapshots").upsert({
+      const payload = {
         customer_id: null,
         customer_email: email,
         items: items.map((i) => ({
@@ -31,7 +31,24 @@ export function useGuestCartSync(email, items, subtotal) {
         subtotal,
         updated_at: new Date().toISOString(),
         reminder_sent_at: null,
-      }, { onConflict: "customer_email" });
+      };
+
+      // não usa upsert com onConflict — o índice é parcial (só para
+      // customer_id nulo), e o Postgres não o reconhece nesse atalho.
+      // Em vez disso, verifica se já existe, e insere ou atualiza.
+      const { data: existing } = await supabase
+        .from("cart_snapshots")
+        .select("id")
+        .is("customer_id", null)
+        .eq("customer_email", email)
+        .maybeSingle();
+
+      if (existing) {
+        await supabase.from("cart_snapshots").update(payload).eq("id", existing.id);
+      } else {
+        await supabase.from("cart_snapshots").insert(payload);
+      }
+
       lastSyncedEmail.current = email;
     }, 2000); // espera 2s de calma depois de escrever, antes de gravar
 
