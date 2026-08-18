@@ -270,10 +270,10 @@ function MobileDrawer({ mainNav, onClose }) {
   );
 }
 
-const PAYMENT_LABELS = { visa: "VISA", mastercard: "Mastercard", amex: "AMEX", transfer: "Transferência" };
+const PAYMENT_LABELS = { visa: "VISA", mastercard: "Mastercard", mbway: "MB WAY", transfer: "Transferência" };
 
 function PaymentIcons({ accepted }) {
-  const methods = (accepted && accepted.length ? accepted : ["visa", "mastercard", "amex", "transfer"]);
+  const methods = (accepted && accepted.length ? accepted : ["visa", "mastercard", "mbway", "transfer"]);
   return (
     <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
       {methods.map((m) => (
