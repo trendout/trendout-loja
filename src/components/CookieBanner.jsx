@@ -93,7 +93,7 @@ export default function CookieBanner() {
             Usamos cookies necessários para a loja funcionar, e (só com a tua autorização) cookies de análises e marketing para melhorarmos a experiência e os anúncios.
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", flexShrink: 0 }}>
+        <div className="cookie-banner-actions" style={{ display: "flex", gap: 10, flexWrap: "wrap", flexShrink: 0 }}>
           <button onClick={openSettings} style={{ background: "none", border: `1px solid ${T.border}`, color: T.text, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13, whiteSpace: "nowrap" }}>
             Personalizar
           </button>
@@ -105,6 +105,18 @@ export default function CookieBanner() {
           </button>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 640px) {
+          .cookie-banner-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+          .cookie-banner-actions button {
+            width: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
