@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CreditCard, Landmark, ShieldCheck, Clock, Trash2, Smartphone, Hash } from "lucide-react";
 import { T } from "../lib/theme";
 import { useCart } from "../hooks/useCart";
+import { useGuestCartSync } from "../hooks/useGuestCartSync";
 import { useShippingRates } from "../hooks/useShippingRates";
 import { useVatRates } from "../hooks/useVatRates";
 import { useStoreInfo } from "../hooks/useStoreInfo";
@@ -60,7 +61,7 @@ function StepHeader({ number, title }) {
 
 export default function CheckoutPage() {
   useSeo({ title: "Checkout — Trendout", noindex: true });
-  const { items, updateQty, removeItem, subtotal } = useCart();
+  const { items, updateQty, removeItem, subtotal, clear } = useCart();
   const { rates, loading: ratesLoading } = useShippingRates();
   const { rates: vatRates } = useVatRates();
   const { info } = useStoreInfo();
@@ -74,6 +75,7 @@ export default function CheckoutPage() {
   const { addresses: savedAddresses, saveAddress: saveCustomerAddress } = useCustomerAddresses(user);
 
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", postal: "", city: "", country: "PT" });
+  useGuestCartSync(form.email, items, subtotal);
   const [wantsNif, setWantsNif] = useState(false);
   const [nif, setNif] = useState("");
   const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
@@ -245,6 +247,7 @@ export default function CheckoutPage() {
       });
 
       setPlacedOrder(order);
+      clear();
     } catch (err) {
       const fullError = [err.message, err.details, err.hint, err.code].filter(Boolean).join(" | ");
       setPlaceError(fullError || "Erro ao finalizar a encomenda.");
@@ -338,6 +341,9 @@ export default function CheckoutPage() {
                 <div style={{ gridColumn: "1 / -1" }}>
                   <label style={labelStyle} htmlFor="checkout-email">Email</label>
                   <input id="checkout-email" name="email" autoComplete="email" style={fieldStyle} type="email" value={form.email} onChange={(e) => update("email", e.target.value)} placeholder="o.teu@email.com" />
+                  <p style={{ fontSize: 11.5, color: T.muted, margin: "6px 0 0" }}>
+                    Se não terminares a compra, podemos contactar-te para te ajudar a completá-la.
+                  </p>
                 </div>
                 <div style={{ gridColumn: "1 / -1" }}>
                   <label style={labelStyle} htmlFor="checkout-phone">Telemóvel</label>
