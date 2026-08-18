@@ -26,13 +26,13 @@ function NewsletterSection() {
   };
 
   return (
-    <section style={{ background: T.bgRaised, borderTop: `1px solid ${T.border}`, padding: "48px 24px" }}>
+    <section style={{ background: T.bgRaised, borderTop: `1px solid ${T.border}`, padding: "48px 24px", marginBottom: -20 }}>
       <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
         <div style={{ fontSize: 12, color: T.accent, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>
           Junta-te à comunidade
         </div>
         <h2 style={{ fontFamily: T.fontHeading, fontSize: 28, margin: "0 0 18px" }}>
-          Novidades e promoções em primeira mão
+          Novidades e Promoções
         </h2>
         {sent ? (
           <div style={{ color: T.accent, fontSize: 14 }}>Obrigado! Já estás na lista.</div>
