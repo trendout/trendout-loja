@@ -9,6 +9,7 @@ import HeroCarousel from "../components/HeroCarousel";
 import CategorySection from "../components/CategorySection";
 
 function NewsletterSection() {
+  const { info } = useStoreInfo();
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -25,14 +26,16 @@ function NewsletterSection() {
     setSent(true);
   };
 
+  if (info.newsletterSectionEnabled === false) return null;
+
   return (
     <section style={{ background: T.bgRaised, borderTop: `1px solid ${T.border}`, padding: "48px 24px", marginBottom: -20 }}>
       <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
         <div style={{ fontSize: 12, color: T.accent, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>
-          Junta-te à comunidade
+          {info.newsletterEyebrow}
         </div>
         <h2 style={{ fontFamily: T.fontHeading, fontSize: 28, margin: "0 0 18px" }}>
-          Novidades e Promoções
+          {info.newsletterTitle}
         </h2>
         {sent ? (
           <div style={{ color: T.accent, fontSize: 14 }}>Obrigado! Já estás na lista.</div>
@@ -46,11 +49,11 @@ function NewsletterSection() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="O teu email"
+              placeholder={info.newsletterEmailPlaceholder}
               style={{ padding: "12px 16px", borderRadius: 8, border: `1px solid ${T.border}`, background: T.bg, color: T.text, minWidth: 240, fontSize: 14 }}
             />
             <button type="submit" style={{ background: T.accent, color: T.bg, border: "none", borderRadius: 8, padding: "12px 24px", fontWeight: 700, cursor: "pointer", fontSize: 14 }}>
-              Subscrever
+              {info.newsletterButtonLabel}
             </button>
           </form>
         )}
