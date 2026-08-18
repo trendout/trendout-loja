@@ -1,11 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { T } from "../lib/theme";
 import { useHeroSlides } from "../hooks/useHeroSlides";
+import { useStoreInfo } from "../hooks/useStoreInfo";
+
+// Decide qual slide aparece primeiro, com base na data de hoje — sem precisar
+// de nenhuma tarefa agendada: o cálculo é sempre o mesmo, todos os
+// visitantes veem o mesmo slide "em primeiro" no mesmo dia.
+function rotateSlides(slides, mode) {
+  if (mode === "manual" || !mode || slides.length <= 1) return slides;
+  const intervalDays = mode === "daily" ? 1 : mode === "every_2_days" ? 2 : mode === "weekly" ? 7 : 1;
+  const daysSinceEpoch = Math.floor(Date.now() / 86400000);
+  const cycleIndex = Math.floor(daysSinceEpoch / intervalDays) % slides.length;
+  return [...slides.slice(cycleIndex), ...slides.slice(0, cycleIndex)];
+}
 
 export default function HeroCarousel() {
-  const { slides } = useHeroSlides();
+  const { slides: rawSlides } = useHeroSlides();
+  const { info } = useStoreInfo();
+  const slides = useMemo(() => rotateSlides(rawSlides, info.heroRotationMode), [rawSlides, info.heroRotationMode]);
   const [index, setIndex] = useState(0);
   const timerRef = useRef(null);
 

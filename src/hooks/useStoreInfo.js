@@ -16,6 +16,7 @@ export function useStoreInfo() {
       setInfo({
         storeName: data.store_name,
         freeShippingThreshold: Number(data.free_shipping_threshold),
+        heroRotationMode: data.hero_rotation_mode || "manual",
         companyAddress: data.company_address,
         companyPhone: data.company_phone,
         companyEmail: data.company_email,
