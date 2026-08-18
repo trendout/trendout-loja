@@ -26,7 +26,7 @@ function NewsletterSection() {
   };
 
   return (
-    <section style={{ background: T.bgRaised, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, padding: "48px 24px" }}>
+    <section style={{ background: T.bgRaised, borderTop: `1px solid ${T.border}`, padding: "48px 24px" }}>
       <div style={{ maxWidth: 640, margin: "0 auto", textAlign: "center" }}>
         <div style={{ fontSize: 12, color: T.accent, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>
           Junta-te à comunidade
