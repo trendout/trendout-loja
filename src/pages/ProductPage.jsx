@@ -13,6 +13,7 @@ import { useSeo, truncateForMeta, useProductJsonLd } from "../hooks/useSeo";
 import ProductGallery from "../components/ProductGallery";
 import ProductCard from "../components/ProductCard";
 import ProductReviews from "../components/ProductReviews";
+import { useProductReviews } from "../hooks/useProductReviews";
 import Layout from "../components/Layout";
 
 export default function ProductPage({ slug }) {
@@ -51,7 +52,8 @@ export default function ProductPage({ slug }) {
       ? truncateForMeta(product.description) || `Compra ${product.name} na ${storeName}. Envio rápido, portes grátis a partir de €${info.freeShippingThreshold || 40}.`
       : "",
   });
-  useProductJsonLd(product, product ? `https://loja.trendout.pt/produto/${product.slug}` : null);
+  const { average: reviewAverage, count: reviewCount } = useProductReviews(product?.id, user);
+  useProductJsonLd(product, product ? `https://loja.trendout.pt/produto/${product.slug}` : null, { average: reviewAverage, count: reviewCount });
 
   if (loading) return <Layout><div style={{ color: T.muted, padding: 60, textAlign: "center" }}>A carregar produto...</div></Layout>;
   if (error || !product) return <Layout><div style={{ color: T.danger, padding: 60, textAlign: "center" }}>Produto não encontrado.</div></Layout>;

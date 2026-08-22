@@ -33,7 +33,7 @@ function stripHtml(str) {
   return String(str || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function buildProductHtml(template, product) {
+function buildProductHtml(template, product, reviewStats) {
   const title = `${product.name} — Trendout`;
   const description = stripHtml(product.description) || `Compra ${product.name} na Trendout.`;
   const image = product.images?.[0] || `${STORE_URL}/og-image.png`;
@@ -59,6 +59,38 @@ function buildProductHtml(template, product) {
   const productMeta = `    <meta property="product:price:amount" content="${price}" />\n    <meta property="product:price:currency" content="EUR" />\n  `;
   html = html.replace("</head>", `${productMeta}</head>`);
 
+  // dados estruturados (schema.org Product) — é isto que o Google, o Merchant
+  // Center, e agora também os robôs de motores de IA (GPTBot, PerplexityBot,
+  // ClaudeBot) leem para saberem preço, disponibilidade, e avaliações, sem
+  // precisarem de correr JavaScript nenhum.
+  const totalStock = (product.product_variants || []).reduce((s, v) => s + (v.stock || 0), 0);
+  const availability = product.availability === "unavailable" || totalStock === 0
+    ? "https://schema.org/OutOfStock"
+    : "https://schema.org/InStock";
+
+  const jsonLd = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    name: product.name,
+    description: description || undefined,
+    image: product.images && product.images.length ? product.images : undefined,
+    brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
+    offers: {
+      "@type": "Offer",
+      url,
+      priceCurrency: "EUR",
+      price,
+      availability,
+    },
+    aggregateRating: reviewStats ? {
+      "@type": "AggregateRating",
+      ratingValue: reviewStats.average,
+      reviewCount: reviewStats.count,
+    } : undefined,
+  };
+  const jsonLdScript = `<script type="application/ld+json" id="product-jsonld">${JSON.stringify(jsonLd)}</script>`;
+  html = html.replace("</head>", `${jsonLdScript}</head>`);
+
   return html;
 }
 
@@ -67,13 +99,25 @@ async function main() {
 
   const products = await fetchTable(
     "products",
-    "select=name,slug,description,images,base_price&is_active=eq.true"
+    "select=id,name,slug,description,images,base_price,brand,availability,product_variants(stock)&is_active=eq.true"
   );
 
+  const reviews = await fetchTable("product_reviews", "select=product_id,rating&status=eq.approved");
+  const reviewsByProduct = {};
+  reviews.forEach((r) => {
+    if (!reviewsByProduct[r.product_id]) reviewsByProduct[r.product_id] = [];
+    reviewsByProduct[r.product_id].push(r.rating);
+  });
+
   products.forEach((p) => {
+    const ratings = reviewsByProduct[p.id] || [];
+    const reviewStats = ratings.length > 0
+      ? { average: ratings.reduce((s, r) => s + r, 0) / ratings.length, count: ratings.length }
+      : null;
+
     const dir = `dist/produto/${p.slug}`;
     mkdirSync(dir, { recursive: true });
-    writeFileSync(`${dir}/index.html`, buildProductHtml(template, p), "utf-8");
+    writeFileSync(`${dir}/index.html`, buildProductHtml(template, p, reviewStats), "utf-8");
   });
 
   console.log(`Geradas ${products.length} páginas de produto estáticas.`);

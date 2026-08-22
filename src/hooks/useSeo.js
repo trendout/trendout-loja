@@ -33,7 +33,7 @@ export function useSeo({ title, description, noindex = false } = {}) {
  * que ajudam o Google a mostrar preço/disponibilidade diretamente nos
  * resultados de pesquisa. Remove-se sozinho quando a página muda.
  */
-export function useProductJsonLd(product, productUrl) {
+export function useProductJsonLd(product, productUrl, reviewStats) {
   useEffect(() => {
     if (!product) return;
 
@@ -56,6 +56,11 @@ export function useProductJsonLd(product, productUrl) {
         price: product.basePrice,
         availability,
       },
+      aggregateRating: reviewStats && reviewStats.count > 0 ? {
+        "@type": "AggregateRating",
+        ratingValue: reviewStats.average,
+        reviewCount: reviewStats.count,
+      } : undefined,
     };
 
     let script = document.getElementById("product-jsonld");
@@ -68,7 +73,7 @@ export function useProductJsonLd(product, productUrl) {
     script.textContent = JSON.stringify(data);
 
     return () => { script?.remove(); };
-  }, [product, productUrl]);
+  }, [product, productUrl, reviewStats?.average, reviewStats?.count]);
 }
 
 /**

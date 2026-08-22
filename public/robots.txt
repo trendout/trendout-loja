@@ -5,4 +5,31 @@ Disallow: /carrinho
 Disallow: /checkout
 Disallow: /checkout/sucesso
 
+# Robôs de motores de IA — autorizados explicitamente, para os produtos
+# poderem ser recomendados em pesquisas feitas no ChatGPT, Perplexity,
+# Gemini, Claude, etc.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: https://loja.trendout.pt/sitemap.xml
